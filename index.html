@@ -16,7 +16,10 @@ body{
     background:#08131d;
     overflow:hidden;
     height:100vh;
-    font-family:Arial, sans-serif;
+    font-family:Arial,sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
 /* Blueprint Grid */
@@ -35,12 +38,8 @@ body{
     to{transform:translateY(40px);}
 }
 
-/* Center Content */
+/* Main Container */
 .container{
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
     text-align:center;
     z-index:2;
 }
@@ -55,7 +54,7 @@ body{
     width:240px;
     opacity:0;
     transform:scale(.3);
-    animation:logoReveal 2s ease forwards;
+    animation:logoReveal 1.2s ease forwards;
 }
 
 /* Shine Effect */
@@ -67,14 +66,14 @@ body{
     width:50%;
     height:100%;
     background:linear-gradient(
-      90deg,
-      transparent,
-      rgba(255,255,255,.8),
-      transparent
+        90deg,
+        transparent,
+        rgba(255,255,255,.8),
+        transparent
     );
     transform:skewX(-20deg);
-    animation:shine 1.5s ease forwards;
-    animation-delay:2s;
+    animation:shine 1s ease forwards;
+    animation-delay:1.4s;
 }
 
 @keyframes shine{
@@ -90,7 +89,7 @@ body{
     }
     70%{
         opacity:1;
-        transform:scale(1.1);
+        transform:scale(1.08);
     }
     100%{
         opacity:1;
@@ -104,18 +103,18 @@ body{
     letter-spacing:3px;
     margin-top:20px;
     opacity:0;
-    animation:textReveal 1s ease forwards;
-    animation-delay:1.5s;
+    animation:textReveal .8s ease forwards;
+    animation-delay:1.2s;
 }
 
 .tagline{
     color:#80cfff;
-    font-size:16px;
-    letter-spacing:6px;
+    font-size:15px;
+    letter-spacing:5px;
     margin-top:10px;
     opacity:0;
-    animation:textReveal 1s ease forwards;
-    animation-delay:2s;
+    animation:textReveal .8s ease forwards;
+    animation-delay:1.5s;
 }
 
 @keyframes textReveal{
@@ -126,22 +125,6 @@ body{
     to{
         opacity:1;
         transform:translateY(0);
-    }
-}
-
-/* Fade Overlay */
-.fade{
-    position:fixed;
-    inset:0;
-    background:#08131d;
-    opacity:0;
-    pointer-events:none;
-    animation:fadeOut 1.2s ease forwards;
-}
-
-@keyframes fadeOut{
-    to{
-        opacity:1;
     }
 }
 </style>
@@ -164,20 +147,17 @@ body{
 </div>
 
 <script>
-
-// Fade before redirect
+// Fade out after logo + text have appeared
 setTimeout(() => {
-    const fade = document.createElement("div");
-    fade.className = "fade";
-    document.body.appendChild(fade);
-}, 5000);
+    document.body.style.transition = "opacity 0.5s ease";
+    document.body.style.opacity = "0";
+}, 3200);
 
-// Redirect
+// Redirect quickly after fade
 setTimeout(() => {
     window.location.href =
     "https://sites.google.com/view/skyrbenconstruction-1/home";
-}, 6200);
-
+}, 3700);
 </script>
 
 </body>
