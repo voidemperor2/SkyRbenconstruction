@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skyrben Construction</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#08131d;
+    overflow:hidden;
+    height:100vh;
+    font-family:Arial, sans-serif;
+}
+
+/* Blueprint Grid */
+.grid{
+    position:absolute;
+    inset:0;
+    background:
+      linear-gradient(rgba(0,170,255,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,170,255,.08) 1px, transparent 1px);
+    background-size:40px 40px;
+    animation:gridMove 8s linear infinite;
+}
+
+@keyframes gridMove{
+    from{transform:translateY(0);}
+    to{transform:translateY(40px);}
+}
+
+/* Center Content */
+.container{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+    z-index:2;
+}
+
+/* Logo */
+.logo-wrap{
+    position:relative;
+    display:inline-block;
+}
+
+.logo{
+    width:240px;
+    opacity:0;
+    transform:scale(.3);
+    animation:logoReveal 2s ease forwards;
+}
+
+/* Shine Effect */
+.logo-wrap::after{
+    content:'';
+    position:absolute;
+    top:0;
+    left:-180%;
+    width:50%;
+    height:100%;
+    background:linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.8),
+      transparent
+    );
+    transform:skewX(-20deg);
+    animation:shine 1.5s ease forwards;
+    animation-delay:2s;
+}
+
+@keyframes shine{
+    to{
+        left:180%;
+    }
+}
+
+@keyframes logoReveal{
+    0%{
+        opacity:0;
+        transform:scale(.3);
+    }
+    70%{
+        opacity:1;
+        transform:scale(1.1);
+    }
+    100%{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+.company{
+    color:white;
+    font-size:42px;
+    letter-spacing:3px;
+    margin-top:20px;
+    opacity:0;
+    animation:textReveal 1s ease forwards;
+    animation-delay:1.5s;
+}
+
+.tagline{
+    color:#80cfff;
+    font-size:16px;
+    letter-spacing:6px;
+    margin-top:10px;
+    opacity:0;
+    animation:textReveal 1s ease forwards;
+    animation-delay:2s;
+}
+
+@keyframes textReveal{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* Fade Overlay */
+.fade{
+    position:fixed;
+    inset:0;
+    background:#08131d;
+    opacity:0;
+    pointer-events:none;
+    animation:fadeOut 1.2s ease forwards;
+}
+
+@keyframes fadeOut{
+    to{
+        opacity:1;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="grid"></div>
+
+<div class="container">
+    <div class="logo-wrap">
+        <img
+            class="logo"
+            src="https://i.ibb.co/1H1J1D7/image.png"
+            alt="Skyrben Logo">
+    </div>
+
+    <div class="company">SKYRBEN CONSTRUCTION</div>
+    <div class="tagline">BUILDING TOMORROW, TODAY</div>
+</div>
+
+<script>
+
+// Fade before redirect
+setTimeout(() => {
+    const fade = document.createElement("div");
+    fade.className = "fade";
+    document.body.appendChild(fade);
+}, 5000);
+
+// Redirect
+setTimeout(() => {
+    window.location.href =
+    "https://sites.google.com/view/skyrbenconstruction-1/home";
+}, 6200);
+
+</script>
+
+</body>
+</html>
