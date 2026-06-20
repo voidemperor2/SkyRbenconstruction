@@ -1,68 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
+<div class="building">
 
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<svg
+class="tower-svg"
+viewBox="0 0 300 600">
 
-<title>SKYRBEN Construction Intro</title>
+<!-- Main Structure -->
 
-<link rel="stylesheet" href="style.css">
+<path
+class="wire"
+d="
+M80 580
+L80 120
+L150 20
+L220 120
+L220 580
+Z"/>
 
-</head>
+<!-- Floors -->
 
-<body>
+<path class="wire floor" d="M80 500 L220 500"/>
+<path class="wire floor" d="M80 430 L220 430"/>
+<path class="wire floor" d="M80 360 L220 360"/>
+<path class="wire floor" d="M80 290 L220 290"/>
+<path class="wire floor" d="M80 220 L220 220"/>
 
-<div class="scene">
+<!-- Center Spine -->
 
-    <!-- Blueprint Grid -->
-    <div class="grid"></div>
+<path
+class="wire"
+d="M150 20 L150 580"/>
 
-    <!-- Gold Dust -->
-    <div class="particles"></div>
+</svg>
 
-    <!-- Road -->
-    <div class="road"></div>
+<div class="glass"></div>
 
-    <!-- Building -->
-    <div class="building">
+<div class="reflection"></div>
 
-        <div class="wireframe"></div>
-
-        <div class="glass"></div>
-
-        <div class="reflection"></div>
-
-        <div class="windows" id="windows"></div>
-
-    </div>
-
-    <!-- Gold Energy -->
-    <div class="energy" id="energy"></div>
-
-    <!-- Logo -->
-
-    <img
-    id="logo"
-    class="logo"
-    src="https://i.ibb.co/1H1J1D7/image.png"
-    alt="SKYRBEN">
-
-    <!-- Brand -->
-
-    <div class="brand" id="brand">
-
-        <h1>SKYRBEN CONSTRUCTION</h1>
-
-        <div class="divider"></div>
-
-        <p>WHERE QUALITY MEETS HERE</p>
-
-    </div>
+<div class="windows" id="windows"></div>
 
 </div>
-
-<script src="script.js"></script>
-
-</body>
-</html>
