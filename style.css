@@ -1,447 +1,48 @@
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
+/* SVG Tower */
 
-body{
-overflow:hidden;
-background:#050505;
-height:100vh;
-}
+.tower-svg{
 
-/* Main Scene */
+position:absolute;
 
-.scene{
-position:relative;
+inset:0;
+
 width:100%;
-height:100vh;
-overflow:hidden;
-background:
-linear-gradient(
-180deg,
-#050505 0%,
-#08131d 100%
-);
-}
-
-/* Blueprint Grid */
-
-.grid{
-position:absolute;
-inset:0;
-
-background:
-linear-gradient(
-rgba(0,170,255,.08) 1px,
-transparent 1px
-),
-linear-gradient(
-90deg,
-rgba(0,170,255,.08) 1px,
-transparent 1px
-);
-
-background-size:40px 40px;
-
-opacity:0;
-
-animation:gridAppear 1.5s forwards;
-}
-
-@keyframes gridAppear{
-to{
-opacity:1;
-}
-}
-
-/* Gold Dust */
-
-.particles{
-position:absolute;
-inset:0;
-overflow:hidden;
-pointer-events:none;
-}
-
-.particles::before,
-.particles::after{
-content:"";
-
-position:absolute;
-
-width:4px;
-height:4px;
-
-background:#f5b041;
-
-border-radius:50%;
-
-box-shadow:
-0 0 10px #f5b041,
-0 0 20px #f5b041;
-
-animation:floatDust 8s linear infinite;
-}
-
-.particles::before{
-left:20%;
-top:100%;
-}
-
-.particles::after{
-left:70%;
-top:120%;
-animation-delay:2s;
-}
-
-@keyframes floatDust{
-
-from{
-transform:translateY(0);
-opacity:0;
-}
-
-20%{
-opacity:1;
-}
-
-to{
-transform:translateY(-120vh);
-opacity:0;
-}
-
-}
-
-/* Road */
-
-.road{
-
-position:absolute;
-
-bottom:-30vh;
-left:50%;
-
-transform:translateX(-50%);
-
-width:28vw;
-height:150vh;
-
-background:#1a1a1a;
-
-clip-path:polygon(
-47% 0,
-53% 0,
-100% 100%,
-0 100%
-);
-
-animation:roadMove 7s ease forwards;
-}
-
-.road::after{
-
-content:"";
-
-position:absolute;
-
-left:49%;
-top:0;
-
-width:2%;
 height:100%;
 
-background:
-repeating-linear-gradient(
-to bottom,
-#f5b041 0 30px,
-transparent 30px 80px
+z-index:3;
+
+}
+
+.wire{
+
+fill:none;
+
+stroke:#00aaff;
+
+stroke-width:3;
+
+filter:
+drop-shadow(
+0 0 10px #00aaff
 );
 
-}
+stroke-dasharray:2000;
 
-@keyframes roadMove{
-
-from{
-transform:
-translateX(-50%)
-scale(.9);
-}
-
-to{
-transform:
-translateX(-50%)
-scale(1.35);
-}
-
-}
-
-/* Building */
-
-.building{
-
-position:absolute;
-
-left:50%;
-bottom:120px;
-
-transform:
-translateX(-50%)
-scale(.18);
-
-width:260px;
-height:520px;
+stroke-dashoffset:2000;
 
 animation:
-buildingApproach 6s ease forwards;
+drawLine 3s ease forwards;
+
 }
 
-@keyframes buildingApproach{
-
-from{
-transform:
-translateX(-50%)
-scale(.18);
-filter:blur(3px);
+.floor{
+animation-delay:.5s;
 }
+
+@keyframes drawLine{
 
 to{
-transform:
-translateX(-50%)
-scale(1);
-filter:blur(0);
-}
-
-}
-
-/* Wireframe */
-
-.wireframe{
-
-position:absolute;
-inset:0;
-
-border:2px solid #00aaff;
-
-box-shadow:
-0 0 15px rgba(0,170,255,.5);
-
-opacity:0;
-
-animation:
-wireframeReveal 2s 1s forwards;
-}
-
-@keyframes wireframeReveal{
-
-from{
-opacity:0;
-transform:scaleY(0);
-transform-origin:bottom;
-}
-
-to{
-opacity:1;
-transform:scaleY(1);
-}
-
-}
-
-/* Glass */
-
-.glass{
-
-position:absolute;
-inset:0;
-
-background:
-linear-gradient(
-180deg,
-rgba(255,255,255,.08),
-rgba(0,170,255,.05)
-);
-
-opacity:0;
-
-animation:
-glassAppear 1s 3s forwards;
-}
-
-@keyframes glassAppear{
-to{
-opacity:1;
-}
-}
-
-/* Reflection Sweep */
-
-.reflection{
-
-position:absolute;
-
-top:0;
-left:-60%;
-
-width:40%;
-height:100%;
-
-background:
-linear-gradient(
-90deg,
-transparent,
-rgba(255,255,255,.35),
-transparent
-);
-
-transform:skewX(-20deg);
-
-animation:
-reflectionSweep 1.5s 4s forwards;
-}
-
-@keyframes reflectionSweep{
-
-to{
-left:160%;
-}
-
-}
-
-/* Windows */
-
-.windows{
-
-display:grid;
-
-grid-template-columns:
-repeat(5,1fr);
-
-gap:8px;
-
-padding:20px;
-
-height:100%;
-}
-
-.window{
-
-height:12px;
-
-background:#1e1e1e;
-
-border-radius:2px;
-}
-
-/* Gold Energy */
-
-.energy{
-
-position:absolute;
-
-left:50%;
-
-bottom:120px;
-
-width:4px;
-height:0;
-
-background:#f5b041;
-
-opacity:0;
-
-box-shadow:
-0 0 15px #f5b041,
-0 0 35px #f5b041;
-}
-
-/* Logo */
-
-.logo{
-
-position:absolute;
-
-top:90px;
-left:50%;
-
-width:180px;
-
-opacity:0;
-
-transform:
-translateX(-50%)
-scale(.4);
-}
-
-/* Brand */
-
-.brand{
-
-position:absolute;
-
-left:50%;
-bottom:50px;
-
-transform:translateX(-50%);
-
-text-align:center;
-
-opacity:0;
-}
-
-.brand h1{
-
-font-size:42px;
-
-white-space:nowrap;
-
-letter-spacing:4px;
-
-color:#f5b041;
-
-text-shadow:
-0 0 10px rgba(245,176,65,.8),
-0 0 25px rgba(245,176,65,.5);
-}
-
-.divider{
-
-width:0;
-height:2px;
-
-background:#f5b041;
-
-margin:15px auto;
-}
-
-.brand p{
-
-color:#f5b041;
-
-letter-spacing:4px;
-
-font-size:12px;
-}
-
-/* Mobile */
-
-@media(max-width:768px){
-
-.building{
-width:180px;
-height:380px;
-}
-
-.logo{
-width:120px;
-}
-
-.brand h1{
-font-size:24px;
-}
-
-.road{
-width:40vw;
+stroke-dashoffset:0;
 }
 
 }
