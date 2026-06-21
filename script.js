@@ -1,114 +1,194 @@
-// Create Windows
-const windowsContainer = document.getElementById("windows");
-
-for (let i = 0; i < 120; i++) {
-    const win = document.createElement("div");
-    win.className = "window";
-    windowsContainer.appendChild(win);
+body {
+    margin: 0;
+    /* Blueprint Grid Background */
+    background-color: #050810;
+    background-image: 
+        linear-gradient(rgba(0, 170, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 170, 255, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    color: #ffffff;
+    font-family: 'Rajdhani', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
 }
 
-// Window Lighting Sequence
-setTimeout(() => {
-    document.querySelectorAll(".window").forEach((win, index) => {
-        setTimeout(() => {
-            win.style.background = "#f5b041";
-            win.style.boxShadow = "0 0 8px #f5b041";
-        }, index * 20);
-    });
-}, 4200);
+/* Premium Window Wrapper */
+.ui-wrapper {
+    background: rgba(10, 13, 20, 0.85);
+    border: 1px solid rgba(0, 170, 255, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(0, 170, 255, 0.1);
+    backdrop-filter: blur(5px);
+    overflow: hidden;
+}
 
-// Gold Energy Line
-setTimeout(() => {
-    const energy = document.getElementById("energy");
-    energy.style.opacity = "1";
-    energy.animate(
-        [
-            { height: "0px" },
-            { height: "520px" }
-        ],
-        {
-            duration: 1200,
-            fill: "forwards",
-            easing: "ease-out"
-        }
-    );
-}, 5200);
+/* macOS-style Top Bar */
+.top-bar {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 170, 255, 0.1);
+}
 
-// Logo Forge Animation
-setTimeout(() => {
-    const logo = document.getElementById("logo");
-    logo.style.transition = "all .9s cubic-bezier(.17,.89,.32,1.28)";
-    logo.style.opacity = "1";
-    logo.style.transform = "translateX(-50%) scale(1)";
-}, 6200);
+.dot {
+    width: 12px; height: 12px; border-radius: 50%; margin-right: 8px;
+}
+.dot.red { background: #ff5f56; }
+.dot.yellow { background: #ffbd2e; }
+.dot.green { background: #27c93f; box-shadow: 0 0 8px #27c93f; }
 
-// Gold Shine Sweep
-setTimeout(() => {
-    const shine = document.createElement("div");
-    shine.style.position = "absolute";
-    shine.style.top = "90px";
-    shine.style.left = "50%";
-    shine.style.width = "180px";
-    shine.style.height = "180px";
-    shine.style.transform = "translateX(-50%)";
-    shine.style.background = "linear-gradient(90deg,transparent,rgba(255,255,255,.8),transparent)";
-    shine.style.filter = "blur(2px)";
-    shine.style.pointerEvents = "none";
-    shine.style.animation = "shineMove 1s forwards";
+.title {
+    margin-left: 12px; font-size: 13px; color: #5a6b82; letter-spacing: 2px; font-weight: 700;
+}
 
-    document.body.appendChild(shine);
+.animation-container {
+    position: relative;
+    width: 350px;
+    height: 650px;
+    display: flex;
+    justify-content: center;
+}
 
-    const style = document.createElement("style");
-    style.innerHTML = `
-        @keyframes shineMove {
-            0% { margin-left: -150px; opacity: 0; }
-            20% { opacity: 1; }
-            100% { margin-left: 150px; opacity: 0; }
-        }
-    `;
-    document.head.appendChild(style);
-}, 6900);
+/* New Slogan Styles */
+.slogan {
+    position: absolute;
+    top: 50px;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 5px;
+    color: #8a99ad;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(15px);
+    z-index: 10;
+}
 
-// Brand Reveal
-setTimeout(() => {
-    const brand = document.getElementById("brand");
-    brand.style.transition = ".8s ease";
-    brand.style.opacity = "1";
+.slogan span {
+    color: #f5b041;
+    font-weight: 700;
+    text-shadow: 0 0 12px rgba(245, 176, 65, 0.6);
+}
 
-    document.querySelector(".divider").animate(
-        [
-            { width: "0" },
-            { width: "260px" }
-        ],
-        {
-            duration: 800,
-            fill: "forwards"
-        }
-    );
-}, 7400);
+/* Building & Animation Elements */
+.building {
+    position: absolute;
+    bottom: 20px;
+    width: 300px;
+    height: 550px;
+}
 
-// Gold Pulse Effect
-setTimeout(() => {
-    document.querySelector(".brand h1").animate(
-        [
-            { textShadow: "0 0 10px rgba(245,176,65,.8)" },
-            { textShadow: "0 0 35px rgba(245,176,65,1)" },
-            { textShadow: "0 0 10px rgba(245,176,65,.8)" }
-        ],
-        {
-            duration: 1500,
-            iterations: 2
-        }
-    );
-}, 8000);
+.tower-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+}
 
-// Smooth Fade Out
-setTimeout(() => {
-    document.body.style.transition = "opacity 1s ease";
-    document.body.style.opacity = "0";
-}, 9500);
+.wire {
+    fill: none;
+    stroke: #00aaff;
+    stroke-width: 3;
+    filter: drop-shadow(0 0 10px #00aaff);
+    stroke-dasharray: 2000;
+    stroke-dashoffset: 2000;
+    animation: drawLine 3s ease forwards;
+}
 
-// Redirect
-setTimeout(() => {
-    window.location.href = "https://sites.google.com/view/skyrbenconstruction-1/home";
-}, 10500);
+.floor { animation-delay: .5s; }
+
+@keyframes drawLine {
+    to { stroke-dashoffset: 0; }
+}
+
+.windows {
+    position: absolute;
+    top: 130px;
+    left: 85px;
+    width: 130px;
+    height: 390px;
+    z-index: 4;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.window {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 1px;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+#energy {
+    position: absolute;
+    bottom: 0px;
+    left: 148px;
+    width: 4px;
+    height: 0px;
+    background: linear-gradient(to top, #f5b041, #ffffff);
+    box-shadow: 0 0 12px #f5b041;
+    z-index: 5;
+    opacity: 0;
+}
+
+#logo {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    opacity: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#logo img {
+    width: 110px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 15px rgba(245, 176, 65, 0.4));
+}
+
+.brand {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    opacity: 0;
+    z-index: 10;
+    width: 280px;
+}
+
+.brand h1 {
+    margin: 0;
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: 8px;
+    color: #ffffff;
+}
+
+.divider {
+    height: 2px;
+    background: #f5b041;
+    width: 0;
+    margin: 12px auto;
+    box-shadow: 0 0 10px #f5b041;
+}
+
+.brand p {
+    margin: 0;
+    font-size: 14px;
+    letter-spacing: 10px;
+    color: #8a99ad;
+    font-weight: 500;
+}
