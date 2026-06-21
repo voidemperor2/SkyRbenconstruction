@@ -4,45 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skyrben Construction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="animation-container">
-        <!-- The Animated Tower Structure -->
-        <div class="building">
-            <svg class="tower-svg" viewBox="0 0 300 600">
-                <!-- Main Structure -->
-                <path class="wire" d="M80 580 L80 120 L150 20 L220 120 L220 580 Z"/>
-                
-                <!-- Floors -->
-                <path class="wire floor" d="M80 500 L220 500"/>
-                <path class="wire floor" d="M80 430 L220 430"/>
-                <path class="wire floor" d="M80 360 L220 360"/>
-                <path class="wire floor" d="M80 290 L220 290"/>
-                <path class="wire floor" d="M80 220 L220 220"/>
+    <div class="ui-wrapper">
+        <div class="top-bar">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span class="title">PROJECT: SKYRBEN // DEPLOYING SYSTEM...</span>
+        </div>
 
-                <!-- Center Spine -->
-                <path class="wire" d="M150 20 L150 580"/>
-            </svg>
-
-            <div class="glass"></div>
-            <div class="reflection"></div>
-            <div class="windows" id="windows"></div>
+        <div class="animation-container">
             
-            <!-- Gold Energy Line -->
-            <div id="energy"></div>
-        </div>
+            <div id="slogan" class="slogan">
+                Where <span>quality</span> meets here
+            </div>
 
-        <!-- Brand Reveal Group with your new Image Logo -->
-        <div id="logo">
-            <img src="https://i.ibb.co/WW7LK0rn/image.png" alt="Skyrben Logo">
-        </div>
-        
-        <div class="brand" id="brand">
-            <h1>SKYRBEN</h1>
-            <div class="divider"></div>
-            <p>DEVELOPERS</p>
+            <div class="building">
+                <svg class="tower-svg" viewBox="0 0 300 600">
+                    <path class="wire" d="M80 580 L80 120 L150 20 L220 120 L220 580 Z"/>
+                    <path class="wire floor" d="M80 500 L220 500"/>
+                    <path class="wire floor" d="M80 430 L220 430"/>
+                    <path class="wire floor" d="M80 360 L220 360"/>
+                    <path class="wire floor" d="M80 290 L220 290"/>
+                    <path class="wire floor" d="M80 220 L220 220"/>
+                    <path class="wire" d="M150 20 L150 580"/>
+                </svg>
+
+                <div class="glass"></div>
+                <div class="reflection"></div>
+                <div class="windows" id="windows"></div>
+                <div id="energy"></div>
+            </div>
+
+            <div id="logo">
+                <img src="https://i.ibb.co/WW7LK0rn/image.png" alt="Skyrben Logo">
+            </div>
+            
+            <div class="brand" id="brand">
+                <h1>SKYRBEN</h1>
+                <div class="divider"></div>
+                <p>CONSTRUCTION</p>
+            </div>
         </div>
     </div>
 
