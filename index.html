@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skyrben Construction - Cinematic Intro</title>
+    <title>Skyrben Construction - Ultimate Cinematic</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -12,38 +12,42 @@
            ========================================= */
         body {
             margin: 0;
-            background-color: #020408;
+            background-color: #010205;
             font-family: 'Rajdhani', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            perspective: 1000px;
+            perspective: 1200px;
         }
 
-        /* Tech Atmosphere background */
-        .bg-glow {
+        /* Cinematic Sunrise Bloom (Hidden at start) */
+        .sunrise-bloom {
             position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(0, 170, 255, 0.15) 0%, transparent 70%);
-            z-index: 0;
-            top: 50%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(245, 176, 65, 0.2) 0%, transparent 70%);
+            top: 40%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) scale(0.5);
+            opacity: 0;
+            z-index: 1;
+            transition: all 3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         /* =========================================
-           THE PHONE/TERMINAL CONTAINER
+           PREMIUM UI WRAPPER (macOS Glassmorphism)
            ========================================= */
         .ui-wrapper {
             position: relative;
             z-index: 10;
-            background: #050811;
-            border: 1px solid rgba(0, 170, 255, 0.25);
-            border-radius: 20px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 30px rgba(0, 170, 255, 0.1);
+            background: linear-gradient(135deg, rgba(8, 12, 20, 0.85), rgba(3, 5, 10, 0.95));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            box-shadow: 0 40px 80px rgba(0,0,0,1), inset 0 1px 0 rgba(255,255,255,0.1);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
             width: 360px;
             height: 680px;
             display: flex;
@@ -53,69 +57,109 @@
 
         .top-bar {
             background: rgba(255, 255, 255, 0.02);
-            padding: 14px 18px;
+            padding: 16px 20px;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid rgba(0, 170, 255, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
-        .dot.red { background: #ff5f56; }
-        .dot.yellow { background: #ffbd2e; }
-        .dot.green { background: #27c93f; }
-        .title { margin-left: 10px; font-size: 12px; color: #00aaff; letter-spacing: 2px; font-weight: 700; }
+        .dot { width: 11px; height: 11px; border-radius: 50%; margin-right: 8px; }
+        .dot.red { background: #ff5f57; }
+        .dot.yellow { background: #febc2e; }
+        .dot.green { background: #28c840; }
+        .title { margin-left: 10px; font-size: 12px; color: #6e7e91; letter-spacing: 2px; font-weight: 700; }
 
         .scene-container {
             position: relative;
             flex-grow: 1;
-            background: linear-gradient(to bottom, #040712 60%, #091026 100%);
+            background: transparent;
             overflow: hidden;
         }
 
         /* =========================================
-           THE STREET & PERSPECTIVE SCENE
+           WET STREET & REFLECTIONS
            ========================================= */
         .street {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 60px;
-            background: #03050a;
-            border-top: 3px solid #00aaff;
-            box-shadow: 0 -5px 20px rgba(0, 170, 255, 0.3);
-            z-index: 5;
+            height: 65px;
+            background: linear-gradient(to bottom, #050810, #010204);
+            border-top: 2px solid rgba(0, 170, 255, 0.4);
+            z-index: 6;
+            overflow: hidden;
+        }
+
+        /* The blurred reflection of the building on the wet asphalt */
+        .reflection-layer {
+            position: absolute;
+            top: 0;
+            left: 25px; /* Aligned with building right: 25px */
+            width: 160px;
+            height: 100%;
+            transform: scaleY(-1);
+            transform-origin: top;
+            opacity: 0.3;
+            filter: blur(4px);
+            z-index: 7;
         }
 
         .sidewalk-lines {
             position: absolute;
             top: 0;
             width: 100%;
-            height: 4px;
-            background-image: linear-gradient(90deg, #00aaff 70%, transparent 70%);
-            background-size: 30px 100%;
-            opacity: 0.4;
+            height: 2px;
+            background-image: linear-gradient(90deg, rgba(0, 170, 255, 0.6) 70%, transparent 70%);
+            background-size: 40px 100%;
+            opacity: 0.5;
+            z-index: 8;
         }
 
         /* =========================================
-           DYNAMIC SKYCRAPER (STARTS DARK)
+           HOLOGRAPHIC BLUEPRINT TO REALITY
            ========================================= */
         .building {
             position: absolute;
-            bottom: 58px;
+            bottom: 65px;
             right: 25px;
             width: 160px;
             height: 440px;
-            background: linear-gradient(to top, #060b18, #03050d);
-            border: 2px solid rgba(0, 170, 255, 0.15);
+            background: transparent;
+            border: 2px solid rgba(0, 170, 255, 0);
             border-bottom: none;
-            z-index: 2;
+            z-index: 4;
             display: flex;
-            flex-direction: column-reverse; /* Allows rows to light up from bottom to top */
+            flex-direction: column-reverse;
             padding: 15px 10px;
             box-sizing: border-box;
             justify-content: space-between;
+            transition: all 1s ease;
         }
+
+        /* Animated Blueprint Border */
+        .building::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 2px solid #00aaff;
+            border-bottom: none;
+            box-shadow: 0 0 15px #00aaff, inset 0 0 15px #00aaff;
+            clip-path: polygon(0 100%, 0 100%, 100% 100%, 100% 100%);
+            animation: drawBlueprint 2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+
+        @keyframes drawBlueprint {
+            0% { clip-path: polygon(0 100%, 0 100%, 100% 100%, 100% 100%); }
+            100% { clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0); }
+        }
+
+        /* Solidify Building */
+        .building.solidified {
+            background: linear-gradient(to top, #060b18, #03050d);
+            border: 2px solid rgba(0, 170, 255, 0.15);
+        }
+        .building.solidified::before { opacity: 0; transition: opacity 0.5s; }
 
         .window-row {
             display: flex;
@@ -123,6 +167,8 @@
             width: 100%;
             height: 12px;
             margin-bottom: 6px;
+            opacity: 0; /* Hidden during blueprint phase */
+            transition: opacity 0.5s;
         }
 
         .window {
@@ -130,52 +176,29 @@
             height: 100%;
             background: rgba(0, 170, 255, 0.05);
             border-radius: 2px;
-            transition: all 0.4s ease;
+            transition: all 0.3s ease;
         }
 
-        /* The active glowing gold state */
         .window.active {
             background: #f5b041;
-            box-shadow: 0 0 12px #f5b041, inset 0 0 4px #ffffff;
+            box-shadow: 0 0 15px #f5b041, inset 0 0 5px #ffffff;
             transform: scale(1.05);
         }
 
-        /* Roof Antenna Grid */
-        .antenna {
-            position: absolute;
-            top: -30px;
-            left: 30px;
-            width: 2px;
-            height: 30px;
-            background: rgba(0, 170, 255, 0.3);
-        }
-        .antenna-dot {
-            position: absolute;
-            top: -35px;
-            left: 29px;
-            width: 4px;
-            height: 4px;
-            background: #ff5f56;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #ff5f56;
-            animation: blink 1s infinite;
-        }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
         /* =========================================
-           THE WALKING MAN (SVG SKELETON)
+           THE WALKING MAN
            ========================================= */
         .character-wrapper {
             position: absolute;
-            bottom: 55px;
-            left: -50px; /* Start off screen */
+            bottom: 60px;
+            left: -50px;
             width: 50px;
             height: 70px;
-            z-index: 6;
+            z-index: 10;
             transform-origin: bottom center;
+            filter: drop-shadow(0 15px 5px rgba(0,0,0,0.8)); /* Ground shadow */
         }
 
-        /* Simple execution of CSS-driven walking logic */
         .man-svg {
             width: 100%;
             height: 100%;
@@ -184,78 +207,65 @@
             stroke-width: 3.5;
             stroke-linecap: round;
             stroke-linejoin: round;
-            filter: drop-shadow(0 0 5px rgba(0, 170, 255, 0.5));
+            filter: drop-shadow(0 0 5px rgba(0, 170, 255, 0.6));
         }
 
-        /* Strut animations for walking */
         .left-leg { animation: swing 0.8s infinite alternate ease-in-out; transform-origin: 25px 35px; }
         .right-leg { animation: swing 0.8s infinite alternate-reverse ease-in-out; transform-origin: 25px 35px; }
         .arms { animation: swing 0.8s infinite alternate ease-in-out; transform-origin: 25px 22px; }
 
-        @keyframes swing {
-            0% { transform: rotate(-25deg); }
-            100% { transform: rotate(25deg); }
-        }
+        @keyframes swing { 0% { transform: rotate(-25deg); } 100% { transform: rotate(25deg); } }
 
-        /* JS moves the wrapper position across frame */
         .character-wrapper.walking {
-            animation: walkToCenter 3.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            animation: walkToCenter 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
 
-        @keyframes walkToCenter {
-            to { left: 65px; }
-        }
+        @keyframes walkToCenter { to { left: 60px; } }
 
         /* =========================================
-           BRAND REVEAL OVERLAYS (SICK MULTI-STAGE)
+           PREMIUM BRAND REVEAL 
            ========================================= */
         #logo {
             position: absolute;
-            top: 10%;
+            top: 12%;
             left: 50%;
-            transform: translateX(-50%) scale(0);
+            transform: translateX(-50%) scale(0.5);
             opacity: 0;
-            z-index: 20;
+            z-index: 30;
         }
 
         #logo img {
-            width: 100px;
+            width: 115px;
             height: auto;
-            filter: drop-shadow(0 10px 20px rgba(245, 176, 65, 0.5));
-        }
-
-        @keyframes floatLogo {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-10px); }
+            filter: drop-shadow(0 15px 30px rgba(245, 176, 65, 0.6));
         }
 
         .brand-group {
             position: absolute;
-            top: 32%;
+            top: 34%;
             left: 50%;
-            transform: translateX(-50%) translateY(30px);
+            transform: translateX(-50%) translateY(40px) scale(0.95);
             text-align: center;
             opacity: 0;
-            z-index: 30;
-            width: 330px;
-            background: linear-gradient(180deg, rgba(3, 5, 10, 0.92), rgba(7, 12, 26, 0.96));
-            padding: 22px 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(0, 170, 255, 0.2);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.9);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 40;
+            width: 340px;
+            background: linear-gradient(180deg, rgba(5, 8, 12, 0.85), rgba(10, 15, 22, 0.95));
+            padding: 24px 10px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
 
         .brand-group h1 {
             margin: 0;
-            font-size: 26px;
+            font-size: 27px;
             font-weight: 700;
             letter-spacing: 5px;
             color: #ffffff;
             white-space: nowrap;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
         }
 
         .divider {
@@ -263,13 +273,13 @@
             background: linear-gradient(90deg, transparent, #f5b041, transparent);
             width: 0;
             margin: 14px auto;
-            box-shadow: 0 0 12px #f5b041;
+            box-shadow: 0 0 15px #f5b041;
         }
 
         .motto {
             margin: 0;
             font-size: 14px;
-            letter-spacing: 4px;
+            letter-spacing: 5px;
             color: #8a99ad;
             text-transform: uppercase;
             font-weight: 600;
@@ -279,15 +289,18 @@
         .motto span.gold {
             color: #f5b041;
             font-weight: 700;
-            text-shadow: 0 0 15px rgba(245, 176, 65, 0.7);
+            text-shadow: 0 0 20px rgba(245, 176, 65, 0.9);
+            animation: textPulse 2s infinite alternate;
         }
         
+        @keyframes textPulse { 0% { opacity: 0.8; } 100% { opacity: 1; text-shadow: 0 0 30px #f5b041; } }
+
         .type-cursor {
             display: inline-block;
             width: 2px;
             height: 13px;
             background: #f5b041;
-            margin-left: 3px;
+            margin-left: 4px;
             animation: blink 0.8s infinite;
             vertical-align: middle;
         }
@@ -295,57 +308,38 @@
 </head>
 <body>
 
-    <div class="bg-glow"></div>
+    <div class="sunrise-bloom" id="sunrise"></div>
 
-    <!-- MAIN TERMINAL WRAPPER -->
     <div class="ui-wrapper">
         <div class="top-bar">
             <span class="dot red"></span>
             <span class="dot yellow"></span>
             <span class="dot green"></span>
-            <span class="title">ENVIRONMENT_ENGAGED // RUN</span>
+            <span class="title">TERMINAL // SYSTEM_INITIALIZED</span>
         </div>
 
         <div class="scene-container">
             
-            <!-- Dynamic Skycraper -->
-            <div class="building" id="buildingMesh">
-                <div class="antenna"></div>
-                <div class="antenna-dot"></div>
-                <!-- Windows rows are dynamically built by JavaScript -->
-            </div>
-
-            <!-- Vector Walking Man -->
+            <div class="building" id="buildingMesh"></div>
+            
             <div class="character-wrapper walking" id="walker">
                 <svg class="man-svg" viewBox="0 0 50 70">
-                    <!-- Head -->
                     <circle cx="25" cy="12" r="5" stroke="#ffffff" fill="#050811" />
-                    <!-- Spine/Body -->
                     <line x1="25" y1="17" x2="25" y2="35" />
-                    <!-- Arms -->
                     <g class="arms">
                         <line x1="25" y1="22" x2="15" y2="32" />
                         <line x1="25" y1="22" x2="35" y2="32" />
                     </g>
-                    <!-- Left Leg -->
-                    <g class="left-leg">
-                        <line x1="25" y1="35" x2="18" y2="52" />
-                        <line x1="18" y1="52" x2="13" y2="66" />
-                    </g>
-                    <!-- Right Leg -->
-                    <g class="right-leg">
-                        <line x1="25" y1="35" x2="32" y2="52" />
-                        <line x1="32" y1="52" x2="37" y2="66" />
-                    </g>
+                    <g class="left-leg"><line x1="25" y1="35" x2="18" y2="52" /><line x1="18" y1="52" x2="13" y2="66" /></g>
+                    <g class="right-leg"><line x1="25" y1="35" x2="32" y2="52" /><line x1="32" y1="52" x2="37" y2="66" /></g>
                 </svg>
             </div>
 
-            <!-- Environment Ground Elements -->
             <div class="street">
                 <div class="sidewalk-lines"></div>
+                <div class="reflection-layer" id="reflectionMesh"></div>
             </div>
 
-            <!-- MAIN BRAND ELEMENTS -->
             <div id="logo">
                 <img src="https://i.ibb.co/WW7LK0rn/image.png" alt="Skyrben Logo">
             </div>
@@ -359,82 +353,99 @@
         </div>
     </div>
 
-    <!-- =========================================
-         CINEMATIC SCRIPT PIPELINE
-         ========================================= -->
     <script>
         const buildingMesh = document.getElementById("buildingMesh");
+        const reflectionMesh = document.getElementById("reflectionMesh");
         const walker = document.getElementById("walker");
         const totalRows = 18;
         const windowsPerRow = 5;
 
-        // 1. Construct the building windows programmatically
+        // 1. Build the physical and reflective windows
         for (let r = 0; r < totalRows; r++) {
             const row = document.createElement("div");
             row.className = "window-row";
+            
+            const refRow = document.createElement("div");
+            refRow.className = "window-row"; // Cloned structure for street reflection
+            refRow.style.opacity = "1"; // Ensure reflection rows are visible
+
             for (let w = 0; w < windowsPerRow; w++) {
                 const win = document.createElement("div");
                 win.className = "window";
                 row.appendChild(win);
+
+                const refWin = document.createElement("div");
+                refWin.className = "window";
+                refRow.appendChild(refWin);
             }
             buildingMesh.appendChild(row);
+            reflectionMesh.appendChild(refRow);
         }
 
-        // 2. Step Sequence: Man walks, then stops in center frame
+        // 2. Blueprint phase ends, solidify building
         setTimeout(() => {
-            // Stop leg movement animations when he finishes his horizontal walk
-            const elements = document.querySelectorAll('.left-leg, .right-leg, .arms');
-            elements.forEach(el => el.style.animation = 'none');
-            
-            // Adjust posture subtly to look upward at the building
+            buildingMesh.classList.add("solidified");
+            // Reveal the window slots inside the building
+            document.querySelectorAll("#buildingMesh .window-row").forEach(row => row.style.opacity = "1");
+        }, 2200);
+
+        // 3. Man finishes walking
+        setTimeout(() => {
+            document.querySelectorAll('.left-leg, .right-leg, .arms').forEach(el => el.style.animation = 'none');
             walker.style.transform = "scaleX(1) rotate(-3deg)";
             
-            // Begin the massive bottom-to-top window cascade immediately!
-            lightUpBuilding();
-        }, 3200);
+            // Trigger Sunrise Bloom
+            const sunrise = document.getElementById("sunrise");
+            sunrise.style.opacity = "1";
+            sunrise.style.transform = "translate(-50%, -50%) scale(1.2)";
 
-        // 3. Lighting Architecture Engine (Cascades up row by row)
+            lightUpBuilding();
+        }, 3000);
+
+        // 4. Double Lighting Array (Building + Street Reflection)
         function lightUpBuilding() {
-            const rows = document.querySelectorAll(".window-row");
+            const rows = document.querySelectorAll("#buildingMesh .window-row");
+            const refRows = document.querySelectorAll("#reflectionMesh .window-row");
+            
             rows.forEach((row, rowIndex) => {
                 setTimeout(() => {
                     const wins = row.querySelectorAll(".window");
                     wins.forEach(w => w.classList.add("active"));
-                }, rowIndex * 90); // Smooth upward traveling speed
+                    
+                    // Light up reflection concurrently
+                    const rWins = refRows[rowIndex].querySelectorAll(".window");
+                    rWins.forEach(rw => rw.classList.add("active"));
+                    
+                }, rowIndex * 80); 
             });
 
-            // Trigger Identity Core Reveal right as lighting approaches structural peak
-            setTimeout(revealBrandIdentity, 1200);
+            setTimeout(revealBrandIdentity, 1400);
         }
 
-        // 4. Ultra Premium Brand Assembly Engine
+        // 5. iOS/Apple-Style Spring Brand Reveal
         function revealBrandIdentity() {
-            // Drop-in bouncing Logo
             const logo = document.getElementById("logo");
-            logo.style.transition = "all 1.1s cubic-bezier(0.34, 1.56, 0.64, 1)";
+            // Premium Spring Curve Transition
+            logo.style.transition = "all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
             logo.style.opacity = "1";
             logo.style.transform = "translateX(-50%) scale(1)";
             
-            setTimeout(() => { 
-                logo.style.animation = "floatLogo 4s ease-in-out infinite"; 
-            }, 1100);
+            setTimeout(() => { logo.style.animation = "floatLogo 4s ease-in-out infinite"; }, 1200);
 
-            // Pop Content Frame Upward
             const brandGroup = document.getElementById("brandGroup");
+            brandGroup.style.transition = "all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
             brandGroup.style.opacity = "1";
-            brandGroup.style.transform = "translateX(-50%) translateY(0)";
+            brandGroup.style.transform = "translateX(-50%) translateY(0) scale(1)";
 
-            // Scale line outwards
             document.querySelector(".divider").animate(
                 [ { width: "0" }, { width: "100%" } ],
-                { duration: 900, fill: "forwards", easing: "ease-out" }
+                { duration: 1000, fill: "forwards", easing: "cubic-bezier(0.25, 1, 0.5, 1)" }
             );
 
-            // Trigger typing execution pipeline
             setTimeout(typeMotto, 800);
         }
 
-        // 5. Terminal Typing Module
+        // 6. Terminal Typing
         function typeMotto() {
             const completeText = "WHERE QUALITY MEETS HERE";
             const target = document.getElementById("mottoLine");
@@ -443,35 +454,31 @@
             const typewriter = setInterval(() => {
                 if (index < completeText.length) {
                     let currentString = completeText.substring(0, index + 1);
-                    
-                    // Style matching for the core keyword
                     if (currentString.includes("QUALITY")) {
                         currentString = currentString.replace("QUALITY", "<span class='gold'>QUALITY</span>");
                     }
-                    
                     target.innerHTML = currentString + '<span class="type-cursor"></span>';
                     index++;
                 } else {
                     clearInterval(typewriter);
-                    // Drop text cursor cleanly
                     setTimeout(() => {
                         const cursor = document.querySelector('.type-cursor');
                         if (cursor) cursor.style.display = 'none';
                     }, 1200);
                 }
-            }, 55);
+            }, 60);
         }
 
-        // 6. Complete System Exit Fade Out
+        // 7. System Exit
         setTimeout(() => {
             document.body.style.transition = "opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)";
             document.body.style.opacity = "0";
-        }, 9000);
+        }, 9500);
 
-        // 7. Core Site Redirect Route
+        // 8. Redirect
         setTimeout(() => {
             window.location.href = "https://sites.google.com/view/skyrbenconstruction-1/home";
-        }, 10200);
+        }, 10700);
     </script>
 </body>
 </html>
