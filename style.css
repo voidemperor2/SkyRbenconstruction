@@ -85,15 +85,25 @@ body {
     opacity: 0;
 }
 
-/* Centered Floating Logo */
+/* Centered Floating Logo Container */
 #logo {
     position: absolute;
-    top: 30%;
+    top: 22%;
     left: 50%;
     transform: translateX(-50%) scale(0);
-    font-size: 48px;
     opacity: 0;
     z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* New Image Scaling Rules */
+#logo img {
+    width: 110px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(245, 176, 65, 0.3));
 }
 
 /* Typography and Brand Layout */
