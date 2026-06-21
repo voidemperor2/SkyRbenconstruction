@@ -3,77 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skyrben Construction</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <title>Skyrben Construction - Ultimate Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     
     <style>
         /* =========================================
-           CORE & BACKGROUND STYLES
+           CORE & AMBIENT BACKGROUND
            ========================================= */
         body {
             margin: 0;
-            background-color: #03050a;
-            /* Moving Tech Grid Background */
-            background-image: 
-                linear-gradient(rgba(0, 170, 255, 0.08) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 170, 255, 0.08) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: moveGrid 20s linear infinite;
-            color: #ffffff;
+            background-color: #020408;
             font-family: 'Rajdhani', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            perspective: 1000px;
+            perspective: 1200px; /* Required for 3D tilt */
+        }
+
+        /* Ambient Glowing Orbs */
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            z-index: 0;
+            animation: orbFloat 20s infinite alternate ease-in-out;
+        }
+        .orb-1 { width: 400px; height: 400px; background: #00aaff; top: -10%; left: -10%; }
+        .orb-2 { width: 300px; height: 300px; background: #f5b041; bottom: -5%; right: -5%; animation-delay: -10s; }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 150px) scale(1.2); }
+        }
+
+        /* Moving Grid Overlay */
+        .grid-overlay {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 170, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 170, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: moveGrid 15s linear infinite;
+            z-index: 1;
         }
 
         @keyframes moveGrid {
             0% { background-position: 0 0; }
-            100% { background-position: 50px 50px; }
+            100% { background-position: 40px 40px; }
         }
 
         /* =========================================
-           MAIN UI WRAPPER
+           MAIN UI WRAPPER (Glassmorphism + 3D)
            ========================================= */
         .ui-wrapper {
-            background: linear-gradient(135deg, rgba(10, 15, 25, 0.9), rgba(5, 8, 15, 0.95));
-            border: 1px solid rgba(0, 170, 255, 0.3);
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(135deg, rgba(10, 15, 25, 0.7), rgba(5, 8, 15, 0.9));
+            border: 1px solid rgba(0, 170, 255, 0.2);
             border-radius: 16px;
             box-shadow: 
                 0 30px 60px rgba(0,0,0,0.9), 
-                0 0 40px rgba(0, 170, 255, 0.15),
-                inset 0 0 20px rgba(0, 170, 255, 0.05);
-            backdrop-filter: blur(10px);
-            overflow: hidden;
+                inset 0 0 20px rgba(0, 170, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             width: 360px;
             height: 680px;
             display: flex;
             flex-direction: column;
+            transform-style: preserve-3d;
+            
             /* Cinematic Entrance */
             opacity: 0;
-            transform: scale(0.9) translateY(30px);
-            animation: wrapperEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transform: scale(0.8) translateY(50px) rotateX(10deg);
+            animation: wrapperEntrance 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         @keyframes wrapperEntrance {
-            to { opacity: 1; transform: scale(1) translateY(0); }
+            to { opacity: 1; transform: scale(1) translateY(0) rotateX(0deg); }
+        }
+
+        /* Outer Glow Border */
+        .ui-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 18px;
+            background: linear-gradient(45deg, transparent, rgba(0,170,255,0.4), transparent, rgba(245,176,65,0.4));
+            z-index: -1;
+            filter: blur(4px);
+            opacity: 0;
+            animation: borderPulse 4s infinite 2s;
+        }
+
+        @keyframes borderPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
         }
 
         .top-bar {
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.03);
             padding: 14px 18px;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid rgba(0, 170, 255, 0.15);
+            border-bottom: 1px solid rgba(0, 170, 255, 0.1);
+            transform: translateZ(20px); /* 3D pop */
         }
 
-        .dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        .dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; }
         .dot.red { background: #ff5f56; }
         .dot.yellow { background: #ffbd2e; }
-        .dot.green { background: #27c93f; box-shadow: 0 0 12px #27c93f; }
-        .title { margin-left: 12px; font-size: 13px; color: #00aaff; letter-spacing: 3px; font-weight: 700; text-shadow: 0 0 8px rgba(0,170,255,0.4); }
+        .dot.green { background: #27c93f; box-shadow: 0 0 12px rgba(39, 201, 63, 0.6); }
+        .title { margin-left: 12px; font-size: 13px; color: #00aaff; letter-spacing: 3px; font-weight: 700; }
 
         .animation-container {
             position: relative;
@@ -81,26 +125,22 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            transform-style: preserve-3d;
         }
 
         /* =========================================
-           BUILDING & ANIMATIONS
+           BUILDING & SCANNERS
            ========================================= */
         .building {
             position: absolute;
             bottom: 30px;
             width: 300px;
             height: 550px;
+            transform: translateZ(30px); /* 3D pop */
         }
 
-        .tower-svg {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 3;
-        }
-
+        .tower-svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; }
+        
         .wire {
             fill: none;
             stroke: #00aaff;
@@ -110,31 +150,28 @@
             stroke-dashoffset: 2000;
             animation: drawLine 3.5s ease-in-out forwards;
         }
-
         .floor { animation-delay: .5s; }
 
-        @keyframes drawLine {
-            to { stroke-dashoffset: 0; }
-        }
+        @keyframes drawLine { to { stroke-dashoffset: 0; } }
 
-        /* Holographic Scanner */
         .scanner {
             position: absolute;
             top: 0;
             left: 50px;
             width: 200px;
-            height: 2px;
-            background: #00aaff;
-            box-shadow: 0 0 20px 5px rgba(0, 170, 255, 0.6);
+            height: 3px;
+            background: #ffffff;
+            box-shadow: 0 0 20px 8px rgba(0, 170, 255, 0.8);
             z-index: 10;
             opacity: 0;
+            border-radius: 50%;
         }
 
         @keyframes scan {
-            0% { top: 10%; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { top: 90%; opacity: 0; }
+            0% { top: 10%; opacity: 0; transform: scaleX(0.8); }
+            15% { opacity: 1; transform: scaleX(1); }
+            85% { opacity: 1; transform: scaleX(1); }
+            100% { top: 90%; opacity: 0; transform: scaleX(0.8); }
         }
 
         .windows {
@@ -154,7 +191,14 @@
         .window {
             background: rgba(255, 255, 255, 0.02);
             border-radius: 2px;
-            transition: background 0.4s ease, box-shadow 0.4s ease;
+            transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        /* The window "pop" effect when lighting up */
+        .window.lit {
+            background: #f5b041;
+            box-shadow: 0 0 15px #f5b041;
+            transform: scale(1.1);
         }
 
         #energy {
@@ -163,11 +207,22 @@
             left: 148px;
             width: 4px;
             height: 0px;
-            background: linear-gradient(to top, #f5b041, #ffffff);
-            box-shadow: 0 0 20px #f5b041, 0 0 40px #f5b041;
+            background: #ffffff;
+            box-shadow: 0 0 20px #f5b041, 0 0 40px #f5b041, 0 0 60px #f5b041;
             z-index: 5;
-            opacity: 0;
             border-radius: 4px;
+        }
+
+        /* Spark Particles generated by JS */
+        .spark {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #ffffff;
+            box-shadow: 0 0 8px #f5b041;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 6;
         }
 
         /* =========================================
@@ -175,9 +230,9 @@
            ========================================= */
         #logo {
             position: absolute;
-            top: 12%;
+            top: 10%;
             left: 50%;
-            transform: translateX(-50%) scale(0);
+            transform: translateX(-50%) scale(0) translateZ(50px);
             opacity: 0;
             z-index: 20;
         }
@@ -186,36 +241,36 @@
             width: 110px;
             height: auto;
             object-fit: contain;
-            filter: drop-shadow(0 10px 20px rgba(245, 176, 65, 0.5));
+            filter: drop-shadow(0 15px 25px rgba(245, 176, 65, 0.6));
         }
 
-        /* Floating animation added via JS after reveal */
-        @keyframes float {
-            0% { transform: translateX(-50%) translateY(0px); }
-            50% { transform: translateX(-50%) translateY(-10px); }
-            100% { transform: translateX(-50%) translateY(0px); }
+        @keyframes floatLogo {
+            0% { transform: translateX(-50%) translateY(0px) translateZ(50px); }
+            50% { transform: translateX(-50%) translateY(-12px) translateZ(50px); }
+            100% { transform: translateX(-50%) translateY(0px) translateZ(50px); }
         }
 
         .brand-group {
             position: absolute;
-            top: 35%;
+            top: 36%;
             left: 50%;
-            transform: translateX(-50%) translateY(40px) scale(0.95);
+            transform: translateX(-50%) translateY(30px) translateZ(60px);
             text-align: center;
             opacity: 0;
             z-index: 30;
-            width: 330px;
-            background: linear-gradient(180deg, rgba(5, 8, 15, 0.9), rgba(10, 15, 25, 0.95));
-            padding: 24px 10px;
+            width: 340px;
+            background: linear-gradient(180deg, rgba(5, 8, 15, 0.8), rgba(10, 15, 25, 0.95));
+            padding: 24px 15px;
             border-radius: 12px;
-            border: 1px solid rgba(245, 176, 65, 0.2);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.9), inset 0 0 20px rgba(245, 176, 65, 0.05);
+            border: 1px solid rgba(245, 176, 65, 0.3);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.9), inset 0 0 20px rgba(245, 176, 65, 0.1);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         .brand-group h1 {
             margin: 0;
-            font-size: 27px;
+            font-size: 28px;
             font-weight: 700;
             letter-spacing: 5px;
             color: #ffffff;
@@ -225,31 +280,51 @@
 
         .divider {
             height: 2px;
-            background: linear-gradient(90deg, transparent, #f5b041, transparent);
+            background: linear-gradient(90deg, transparent, #f5b041, #ffffff, #f5b041, transparent);
             width: 0;
-            margin: 14px auto;
-            box-shadow: 0 0 15px #f5b041;
+            margin: 16px auto;
+            box-shadow: 0 0 20px #f5b041;
         }
 
         .motto {
             margin: 0;
-            font-size: 14px;
-            letter-spacing: 5px;
+            font-size: 15px;
+            letter-spacing: 4px;
             color: #8a99ad;
             text-transform: uppercase;
-            font-weight: 500;
+            font-weight: 600;
+            min-height: 20px; /* Prevents jumping during typing effect */
         }
 
-        .motto span {
+        .motto span.highlight {
             color: #f5b041;
             font-weight: 700;
-            text-shadow: 0 0 15px rgba(245, 176, 65, 0.6);
+            text-shadow: 0 0 20px rgba(245, 176, 65, 0.8);
+            transition: all 0.5s ease;
         }
+
+        /* Cursor for typing effect */
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 15px;
+            background: #f5b041;
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
+            margin-left: 3px;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
     </style>
 </head>
 <body>
 
-    <div class="ui-wrapper">
+    <div class="orb-1 ambient-orb"></div>
+    <div class="orb-2 ambient-orb"></div>
+    <div class="grid-overlay"></div>
+
+    <div class="ui-wrapper" id="card">
         <div class="top-bar">
             <span class="dot red"></span>
             <span class="dot yellow"></span>
@@ -258,7 +333,7 @@
         </div>
 
         <div class="animation-container">
-            <div class="building">
+            <div class="building" id="building-container">
                 <div class="scanner" id="scanner"></div>
 
                 <svg class="tower-svg" viewBox="0 0 300 600">
@@ -281,17 +356,37 @@
             <div class="brand-group" id="brandGroup">
                 <h1>SKYRBEN CONSTRUCTION</h1>
                 <div class="divider"></div>
-                <p class="motto">WHERE <span>QUALITY</span> MEETS HERE</p>
+                <p class="motto" id="typewriterText"><span class="cursor"></span></p>
             </div>
         </div>
     </div>
 
     <script>
         /* =========================================
-           JAVASCRIPT ANIMATION TIMELINE
+           INTERACTIVE 3D PARALLAX EFFECT
+           ========================================= */
+        const card = document.getElementById("card");
+        document.addEventListener("mousemove", (e) => {
+            // Only apply 3D effect after entrance animation finishes (1.5s)
+            if (performance.now() > 1500) {
+                let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+                let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+                card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            }
+        });
+
+        // Reset rotation when mouse leaves screen
+        document.addEventListener("mouseleave", () => {
+            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+            card.style.transition = "transform 0.5s ease";
+            setTimeout(() => card.style.transition = "none", 500);
+        });
+
+        /* =========================================
+           ANIMATION TIMELINE
            ========================================= */
 
-        // 1. Create Windows immediately
+        // 1. Setup Windows
         const windowsContainer = document.getElementById("windows");
         for (let i = 0; i < 120; i++) {
             const win = document.createElement("div");
@@ -299,83 +394,122 @@
             windowsContainer.appendChild(win);
         }
 
-        // 2. Start Scanner Effect shortly after load
+        // 2. Start Scanner
         setTimeout(() => {
-            const scanner = document.getElementById("scanner");
-            scanner.style.animation = "scan 3s cubic-bezier(0.4, 0, 0.2, 1) infinite";
-        }, 1000);
+            document.getElementById("scanner").style.animation = "scan 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite";
+        }, 800);
 
-        // 3. Reveal Logo and Brand Text (At 3.5 Seconds!)
+        // 3. Reveal Brand Container & Draw Line
         setTimeout(() => {
-            // Pop in Logo with sick bounce
             const logo = document.getElementById("logo");
             logo.style.transition = "all 1s cubic-bezier(0.34, 1.56, 0.64, 1)";
             logo.style.opacity = "1";
-            logo.style.transform = "translateX(-50%) scale(1)";
+            logo.style.transform = "translateX(-50%) scale(1) translateZ(50px)";
             
-            // Add continuous float effect after popping in
-            setTimeout(() => {
-                logo.style.animation = "float 4s ease-in-out infinite";
-            }, 1000);
+            setTimeout(() => { logo.style.animation = "floatLogo 4s ease-in-out infinite"; }, 1000);
 
-            // Fade in and slide up the Brand Group
             const brandGroup = document.getElementById("brandGroup");
             brandGroup.style.transition = "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)";
             brandGroup.style.opacity = "1";
-            brandGroup.style.transform = "translateX(-50%) translateY(0) scale(1)";
+            brandGroup.style.transform = "translateX(-50%) translateY(0) translateZ(60px)";
 
-            // Draw the glowing straight line
             document.querySelector(".divider").animate(
                 [ { width: "0" }, { width: "100%" } ],
                 { duration: 1000, fill: "forwards", easing: "ease-out" }
             );
-        }, 3500);
+        }, 3000);
 
-        // 4. Window Lighting Sequence (Cascade Effect)
+        // 4. Sick Terminal Typing Effect for Motto
         setTimeout(() => {
-            // Remove the scanner when windows light up
+            const textToType = "WHERE QUALITY MEETS HERE";
+            const targetElement = document.getElementById("typewriterText");
+            let currentIndex = 0;
+            targetElement.innerHTML = '<span class="cursor"></span>'; // Reset
+
+            const typingInterval = setInterval(() => {
+                if (currentIndex < textToType.length) {
+                    let currentText = textToType.substring(0, currentIndex + 1);
+                    
+                    // Highlight "QUALITY" magically once it finishes typing that word
+                    if (currentText.includes("QUALITY")) {
+                        currentText = currentText.replace("QUALITY", "<span class='highlight'>QUALITY</span>");
+                    }
+                    
+                    targetElement.innerHTML = currentText + '<span class="cursor"></span>';
+                    currentIndex++;
+                } else {
+                    clearInterval(typingInterval);
+                    // Remove cursor 1 second after typing finishes
+                    setTimeout(() => {
+                        const cursor = document.querySelector('.cursor');
+                        if(cursor) cursor.style.display = 'none';
+                    }, 1000);
+                }
+            }, 60); // Speed of typing
+        }, 3600);
+
+        // 5. Cascade Window Lighting with "Pop" effect
+        setTimeout(() => {
             document.getElementById("scanner").style.display = "none";
 
             document.querySelectorAll(".window").forEach((win, index) => {
                 setTimeout(() => {
-                    win.style.background = "#f5b041";
-                    win.style.boxShadow = "0 0 12px #f5b041";
-                }, index * 15); // slightly faster cascade
+                    win.classList.add("lit");
+                }, index * 12);
             });
         }, 4200);
 
-        // 5. Intense Gold Energy Line
+        // 6. Intense Energy Line with Particle Sparks
         setTimeout(() => {
             const energy = document.getElementById("energy");
-            energy.style.opacity = "1";
+            const bContainer = document.getElementById("building-container");
+            
             energy.animate(
-                [ { height: "0px" }, { height: "480px" } ],
-                { duration: 1000, fill: "forwards", easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" }
+                [ { height: "0px", opacity: 0 }, { height: "480px", opacity: 1 } ],
+                { duration: 900, fill: "forwards", easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" }
             );
-        }, 5000);
 
-        // 6. Gold Pulse Effect on Title
+            // Generate Sparks
+            for(let i=0; i<30; i++) {
+                setTimeout(() => {
+                    const spark = document.createElement("div");
+                    spark.className = "spark";
+                    spark.style.left = (148 + (Math.random() * 10 - 5)) + "px";
+                    spark.style.bottom = (Math.random() * 400) + "px";
+                    bContainer.appendChild(spark);
+
+                    spark.animate([
+                        { transform: "translate(0,0) scale(1)", opacity: 1 },
+                        { transform: `translate(${(Math.random()*100 - 50)}px, -${Math.random()*100}px) scale(0)`, opacity: 0 }
+                    ], { duration: 800 + Math.random()*500, easing: "ease-out" });
+                    
+                    setTimeout(() => spark.remove(), 1500);
+                }, i * 30);
+            }
+        }, 4800);
+
+        // 7. Gold Pulse Effect on Title
         setTimeout(() => {
             document.querySelector(".brand-group h1").animate(
                 [
-                    { textShadow: "0 0 10px rgba(245,176,65,.5)" },
+                    { textShadow: "0 5px 15px rgba(0,0,0,1)" },
                     { textShadow: "0 0 40px rgba(245,176,65,1), 0 0 80px rgba(245,176,65,0.8)" },
-                    { textShadow: "0 0 10px rgba(245,176,65,.5)" }
+                    { textShadow: "0 5px 15px rgba(0,0,0,1)" }
                 ],
                 { duration: 2000, iterations: 2 }
             );
-        }, 5800);
+        }, 5600);
 
-        // 7. Smooth Fade Out 
+        // 8. Smooth Fade Out 
         setTimeout(() => {
-            document.body.style.transition = "opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)";
+            document.body.style.transition = "opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1)";
             document.body.style.opacity = "0";
         }, 8500);
 
-        // 8. Redirect
+        // 9. Redirect
         setTimeout(() => {
             window.location.href = "https://sites.google.com/view/skyrbenconstruction-1/home";
-        }, 9800);
+        }, 10000);
     </script>
 </body>
 </html>
