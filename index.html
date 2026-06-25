@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>SKYRBEN CONSTRUCTION</title>
+
 <style>
 * {
     margin: 0;
@@ -16,53 +18,55 @@ html, body {
     height: 100%;
     overflow: hidden;
     background: #02060a;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
 }
 
 /* =========================
-   MAIN SCENE & UI
+   MAIN SCENE & SYSTEM
    ========================= */
 #scene {
     position: fixed;
     inset: 0;
     overflow: hidden;
     background: radial-gradient(circle at center, #12283a 0%, #08131c 40%, #02060a 100%);
-    transition: transform 0.1s ease-out; /* For mouse parallax */
+    transition: transform 0.15s ease-out; /* Smooth interactive parallax response */
 }
 
-#skipBtn {
-    position: absolute;
-    top: 30px;
-    right: 30px;
-    padding: 10px 20px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: rgba(255, 255, 255, 0.7);
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    font-size: 12px;
-    letter-spacing: 3px;
-    cursor: pointer;
-    z-index: 999;
-    transition: all 0.3s ease;
-}
-
-#skipBtn:hover {
-    color: white;
-    border-color: white;
-    background: rgba(255, 255, 255, 0.1);
-}
-
-/* =========================
-   CAMERA
-   ========================= */
 #camera {
     position: absolute;
     inset: 0;
     transform-origin: center center;
 }
 
+/* Skip Button Feature for Premium UX */
+#skipBtn {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    padding: 10px 22px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.6);
+    background: rgba(2, 6, 10, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    cursor: pointer;
+    z-index: 999;
+    border-radius: 4px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#skipBtn:hover {
+    color: #fff;
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.1);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+}
+
 /* =========================
-   STARS & SHOOTING STARS
+   ATMOSPHERE EFFECTS
    ========================= */
 #stars {
     position: absolute;
@@ -81,25 +85,6 @@ html, body {
     50% { opacity: 1; }
 }
 
-.shootingStar {
-    position: absolute;
-    width: 150px;
-    height: 2px;
-    background: linear-gradient(90deg, rgba(255,255,255,0.8), transparent);
-    opacity: 0;
-    transform: rotate(-45deg);
-    pointer-events: none;
-    z-index: 2;
-}
-
-@keyframes shoot {
-    0% { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 1; }
-    100% { transform: translateX(-800px) translateY(800px) rotate(-45deg); opacity: 0; }
-}
-
-/* =========================
-   MOON
-   ========================= */
 #moon {
     position: absolute;
     top: 8%;
@@ -123,9 +108,6 @@ html, body {
     background: radial-gradient(circle, rgba(255,255,255,.15), transparent 70%);
 }
 
-/* =========================
-   CLOUDS
-   ========================= */
 #clouds {
     position: absolute;
     inset: 0;
@@ -146,9 +128,6 @@ html, body {
     to { transform: translateX(140vw); }
 }
 
-/* =========================
-   FOG
-   ========================= */
 #fog {
     position: absolute;
     left: 0; right: 0; bottom: 0;
@@ -159,7 +138,7 @@ html, body {
 }
 
 /* =========================
-   CITY
+   CITY SCENE ARCHITECTURE
    ========================= */
 #city {
     position: absolute;
@@ -205,7 +184,7 @@ html, body {
 }
 
 /* =========================
-   SKYRBEN HQ
+   PREMIUM SKYRBEN HQ TOWER
    ========================= */
 #hq {
     position: absolute;
@@ -224,6 +203,7 @@ html, body {
     position: absolute;
     top: -90px; left: 50%;
     transform: translateX(-50%);
+    width: 0; height: 0;
     border-left: 90px solid transparent;
     border-right: 90px solid transparent;
     border-bottom: 90px solid #4c8db6;
@@ -237,14 +217,45 @@ html, body {
     background: rgba(255,255,255,.04);
 }
 
+/* Upgraded Logo Container & Ambient Backlighting Aura */
+#logoContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 240px;
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 150;
+}
+
+#logoAura {
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.25) 0%, transparent 70%);
+    filter: blur(10px);
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+    pointer-events: none;
+}
+
 #towerLogo {
     position: absolute;
-    top: 50%;                     /* Centered vertically */
-    left: 50%;                    /* Centered horizontally */
-    transform: translate(-50%, -50%) scale(.5); /* Maintains perfect central baseline */
-    width: 220px; height: auto; max-width: 90%;
-    opacity: 0; z-index: 150;
-    filter: drop-shadow(0 0 20px #d4af37) drop-shadow(0 0 50px #d4af37);
+    width: 220px;
+    height: auto;
+    max-width: 95%;
+    opacity: 0;
+    transform: scale(0.65); /* Starts slightly downscaled for a dynamic pop effect */
+    /* Luxury Multi-tiered Golden Drop Shadow Filter Matrix */
+    filter: 
+        drop-shadow(0 2px 8px rgba(0,0,0,0.8))
+        drop-shadow(0 0 12px rgba(212, 175, 55, 0.35))
+        drop-shadow(0 0 35px rgba(212, 175, 55, 0.15));
+    transition: transform 1.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 1s ease-out;
 }
 
 #energyCore {
@@ -257,7 +268,7 @@ html, body {
 }
 
 /* =========================
-   ANIMATIONS
+   CINEMATIC ANIMATIONS
    ========================= */
 @keyframes droneFly {
     0% { transform: translateY(120px) scale(.75); }
@@ -271,9 +282,6 @@ html, body {
     50% { transform: translateY(-10px); }
 }
 
-/* =========================
-   TRAFFIC & PARTICLES
-   ========================= */
 #traffic {
     position: absolute;
     left: 50%; bottom: 0;
@@ -309,27 +317,41 @@ html, body {
 }
 
 /* =========================
-   BRAND REVEAL
+   UPGRADED BRAND UI DESIGN
    ========================= */
 #brand {
     position: absolute;
     left: 50%; bottom: 8%;
     transform: translateX(-50%);
-    text-align: center; opacity: 0; z-index: 300;
+    text-align: center;
+    opacity: 0;
+    z-index: 300;
+    width: 100%;
+    max-width: 800px;
 }
 
 #brand h1 {
-    font-size: 54px;
-    letter-spacing: 8px;
-    color: #d4af37;
-    text-shadow: 0 0 20px rgba(212,175,55,.8), 0 0 60px rgba(212,175,55,.3);
+    font-size: 50px;
+    font-weight: 800;
+    letter-spacing: 12px;
+    /* Luxury Gold Metallic Shimmer Finish */
+    background: linear-gradient(135deg, #ffffff 10%, #f3e5ab 40%, #d4af37 70%, #b8860b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
+    text-transform: uppercase;
+    margin-bottom: 4px;
 }
 
 #brand p {
-    margin-top: 15px;
-    font-size: 16px;
-    letter-spacing: 6px;
-    color: white; opacity: .85;
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 9px;
+    color: #a4b3c6;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    text-transform: uppercase;
+    opacity: 0.9;
 }
 
 #glassSweep {
@@ -345,6 +367,7 @@ html, body {
 }
 </style>
 </head>
+
 <body>
 
 <div id="scene">
@@ -358,7 +381,10 @@ html, body {
             <div id="skylineBack"></div>
             <div id="skylineFront"></div>
             <div id="hq">
-                <img id="towerLogo" src="https://i.ibb.co/995h3sQn/image-removebg-preview.png" alt="SKYRBEN Logo">
+                <div id="logoContainer">
+                    <div id="logoAura"></div>
+                    <img id="towerLogo" src="https://i.ibb.co/995h3sQn/image-removebg-preview.png" alt="SKYRBEN Logo">
+                </div>
                 <div id="glassSweep"></div>
                 <div id="energyCore"></div>
             </div>
@@ -376,7 +402,7 @@ html, body {
 
 <script>
 /* =========================
-   SCENE GENERATION
+   SCENE & MAP POPULATION
    ========================= */
 
 // Stars
@@ -393,17 +419,6 @@ for(let i=0; i<350; i++){
     stars.appendChild(s);
 }
 
-// Shooting Stars
-setInterval(() => {
-    const star = document.createElement("div");
-    star.className = "shootingStar";
-    star.style.left = (50 + Math.random() * 50) + "%";
-    star.style.top = (Math.random() * 30) + "%";
-    star.style.animation = `shoot ${1 + Math.random()}s linear forwards`;
-    stars.appendChild(star);
-    setTimeout(() => star.remove(), 2000);
-}, 3000);
-
 // Clouds
 const clouds = document.getElementById("clouds");
 for(let i=0; i<14; i++){
@@ -417,7 +432,7 @@ for(let i=0; i<14; i++){
     clouds.appendChild(c);
 }
 
-// City Skyline Back
+// Skyline Back
 const back = document.getElementById("skylineBack");
 for(let i=0; i<18; i++){
     const b = document.createElement("div");
@@ -429,7 +444,7 @@ for(let i=0; i<18; i++){
     back.appendChild(b);
 }
 
-// City Skyline Front
+// Skyline Front
 const front = document.getElementById("skylineFront");
 for(let i=0; i<12; i++){
     const b = document.createElement("div");
@@ -440,7 +455,7 @@ for(let i=0; i<12; i++){
     front.appendChild(b);
 }
 
-// Windows (Optimized with DocumentFragment)
+// Optimized Window Matrix (Document Fragment Processing)
 setTimeout(() => {
     document.querySelectorAll(".glassBuilding, #hq").forEach(building => {
         const width = building.offsetWidth;
@@ -463,13 +478,13 @@ setTimeout(() => {
 }, 100);
 
 /* =========================
-   ANIMATION TRIGGERS
+   ANIMATION INTERFACES
    ========================= */
 document.getElementById("camera").style.animation = "droneFly 12s forwards";
 document.getElementById("skylineBack").style.animation = "cityFloat 8s ease-in-out infinite";
 document.getElementById("skylineFront").style.animation = "cityFloat 6s ease-in-out infinite";
 
-// Traffic Setup
+// Traffic Tracks Engine
 const traffic = document.getElementById("traffic");
 for(let i=0; i<40; i++){
     const trail = document.createElement("div");
@@ -477,12 +492,12 @@ for(let i=0; i<40; i++){
     trail.style.left = (Math.random() * 100) + "%";
     trail.style.height = (60 + Math.random() * 180) + "px";
     trail.style.opacity = (.3 + Math.random() * .7);
-    trail.dataset.speed = 4 + Math.random() * 6; // Randomize speeds
+    trail.dataset.speed = 5 + Math.random() * 4;
     trail.dataset.y = Math.random() * 300;
     traffic.appendChild(trail);
 }
 
-// Particles Setup
+// Floating Particle Core Engine
 const particleArray = [];
 for(let i=0; i<80; i++){
     const p = document.createElement("div");
@@ -494,15 +509,15 @@ for(let i=0; i<80; i++){
     particleArray.push({
         element: p,
         y: 0,
-        speed: 1 + Math.random() * 1.5
+        speed: 1.2 + Math.random() * 1.3
     });
 }
 
-/* =========================
-   OPTIMIZED ANIMATION LOOP
-   ========================= */
-function animateFrame() {
-    // Animate Traffic
+/* ==================================
+   PERFORMANCE RENDER LOOP (60 FPS)
+   ================================== */
+function engineUpdate() {
+    // Traffic Trails Process
     document.querySelectorAll(".trail").forEach(trail => {
         let current = parseFloat(trail.dataset.y || 0);
         current += parseFloat(trail.dataset.speed);
@@ -511,7 +526,7 @@ function animateFrame() {
         trail.style.transform = `translateY(${current}px)`;
     });
 
-    // Animate Particles
+    // Particle Ambient Updraft Process
     particleArray.forEach(p => {
         p.y -= p.speed;
         if(p.y < -140) p.y = 0;
@@ -519,76 +534,85 @@ function animateFrame() {
         p.element.style.opacity = Math.random();
     });
 
-    requestAnimationFrame(animateFrame);
+    requestAnimationFrame(engineUpdate);
 }
-requestAnimationFrame(animateFrame); // Start the loop
+requestAnimationFrame(engineUpdate);
 
 /* =========================
-   INTERACTIVE PARALLAX
+   INTERACTIVE MOUSE PARALLAX
    ========================= */
 document.addEventListener('mousemove', (e) => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 20; // 20px max movement
-    const y = (e.clientY / window.innerHeight - 0.5) * 20;
+    const x = (e.clientX / window.innerWidth - 0.5) * 22;
+    const y = (e.clientY / window.innerHeight - 0.5) * 22;
     document.getElementById('scene').style.transform = `translate(${-x}px, ${-y}px)`;
 });
 
 /* =========================
-   TIMED REVEALS
+   CINEMATIC TIMELINE CONTROLLER
    ========================= */
-let redirectTimeout;
+let systemRedirectTimeout;
 
-function startCinematics() {
+function initiateCinematics() {
+    // Energy Core Ascent
     setTimeout(() => {
         const core = document.getElementById("energyCore");
         core.style.transition = "1.4s ease";
         core.style.height = "100%";
     }, 7000);
 
+    // Tower Structural Glow Activation
     setTimeout(() => {
         document.getElementById("hq").style.boxShadow = "0 0 80px rgba(212,175,55,.7), 0 0 150px rgba(212,175,55,.3)";
     }, 7800);
 
+    // Glass Flare Reflection Sweep
     setTimeout(() => {
         const glass = document.getElementById("glassSweep");
         glass.style.transition = "1.8s ease";
         glass.style.left = "150%";
     }, 8200);
 
+    // Dynamic Central Logo Reveal & Aura Expansion
     setTimeout(() => {
         const logo = document.getElementById("towerLogo");
-        logo.style.transition = "1.2s ease";
+        const aura = document.getElementById("logoAura");
+        
         logo.style.opacity = "1";
-        logo.style.transform = "translate(-50%, -50%) scale(1)"; /* Keeps center alignment during upscale */
+        logo.style.transform = "scale(1)"; /* Transitions beautifully into its default center state */
+        aura.style.opacity = "1";
     }, 8800);
 
+    // Premium Corporate Brand Text Reveal
     setTimeout(() => {
-        document.getElementById("brand").style.transition = "1s ease";
-        document.getElementById("brand").style.opacity = "1";
+        const brand = document.getElementById("brand");
+        brand.style.transition = "1.2s cubic-bezier(0.25, 1, 0.5, 1)";
+        brand.style.opacity = "1";
     }, 9800);
 
+    // Master Cinematic Scene Fadeout
     setTimeout(() => {
         document.getElementById("scene").style.animation = "fadeScene 1.2s forwards";
     }, 11500);
 
-    redirectTimeout = setTimeout(triggerRedirect, 12000);
+    systemRedirectTimeout = setTimeout(executeRedirect, 12000);
 }
 
-function triggerRedirect() {
+function executeRedirect() {
     window.location.href = "https://sites.google.com/view/skyrbenconstruction-1/home";
 }
 
-// Start sequence
-startCinematics();
+// Fire Sequence
+initiateCinematics();
 
 /* =========================
-   SKIP BUTTON LOGIC
+   SKIP INTRO OPERATIONS
    ========================= */
 document.getElementById('skipBtn').addEventListener('click', () => {
-    clearTimeout(redirectTimeout);
-    document.getElementById("scene").style.animation = "fadeScene 0.5s forwards";
-    setTimeout(triggerRedirect, 500); // Redirect smoothly
+    clearTimeout(systemRedirectTimeout);
+    document.getElementById("scene").style.animation = "fadeScene 0.4s forwards";
+    setTimeout(executeRedirect, 400);
 });
-
 </script>
+
 </body>
 </html>
