@@ -2,595 +2,1190 @@
 <html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>SKYRBEN CONSTRUCTION</title>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
-html, body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #02060a;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-}
-
-/* =========================
-   MAIN SCENE & SYSTEM
-   ========================= */
-#scene {
-    position: fixed;
-    inset: 0;
-    overflow: hidden;
-    background: radial-gradient(circle at center, #12283a 0%, #08131c 40%, #02060a 100%);
-    transition: transform 0.15s ease-out;
-}
-
-#camera {
-    position: absolute;
-    inset: 0;
-    transform-origin: center center;
-}
-
-/* Skip Button Feature for Premium UX */
-#skipBtn {
-    position: absolute;
-    top: 30px;
-    right: 30px;
-    padding: 10px 22px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.6);
-    background: rgba(2, 6, 10, 0.4);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 3px;
-    cursor: pointer;
-    z-index: 999;
-    border-radius: 4px;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-#skipBtn:hover {
-    color: #fff;
-    border-color: #d4af37;
-    background: rgba(212, 175, 55, 0.1);
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+html,
+body{
+width:100%;
+height:100%;
+overflow:hidden;
+background:#02060a;
+font-family:'Segoe UI',sans-serif;
 }
 
 /* =========================
-   ATMOSPHERE EFFECTS
-   ========================= */
-#stars {
-    position: absolute;
-    inset: 0;
-}
+MAIN SCENE
+========================= */
 
-.star {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    animation: twinkle 5s infinite ease-in-out;
-}
+#scene{
 
-@keyframes twinkle {
-    0%, 100% { opacity: .2; }
-    50% { opacity: 1; }
-}
+position:fixed;
+inset:0;
 
-#moon {
-    position: absolute;
-    top: 8%;
-    right: 10%;
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #ffffff, #dfe7ef);
-    box-shadow: 0 0 40px rgba(255,255,255,.4), 0 0 120px rgba(255,255,255,.15);
-    z-index: 5;
-}
+overflow:hidden;
 
-#moonGlow {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-    width: 500px;
-    height: 500px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,.15), transparent 70%);
-}
+background:
+radial-gradient(
+circle at center,
+#12283a 0%,
+#08131c 40%,
+#02060a 100%
+);
 
-#clouds {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 6;
-}
-
-.cloud {
-    position: absolute;
-    background: rgba(255,255,255,.05);
-    border-radius: 999px;
-    filter: blur(35px);
-    animation: cloudMove linear infinite;
-}
-
-@keyframes cloudMove {
-    from { transform: translateX(-500px); }
-    to { transform: translateX(140vw); }
-}
-
-#fog {
-    position: absolute;
-    left: 0; right: 0; bottom: 0;
-    height: 40%;
-    background: linear-gradient(180deg, transparent, rgba(255,255,255,.03), rgba(255,255,255,.08));
-    filter: blur(12px);
-    z-index: 20;
 }
 
 /* =========================
-   CITY SCENE ARCHITECTURE
-   ========================= */
-#city {
-    position: absolute;
-    bottom: 15%;
-    width: 100%;
-    height: 65%;
-    z-index: 10;
-}
+CAMERA
+========================= */
 
-#skylineBack, #skylineFront {
-    position: absolute;
-    inset: 0;
-}
+#camera{
 
-.glassBuilding {
-    position: absolute;
-    bottom: 0;
-    background: linear-gradient(180deg, rgba(50,110,160,.95), rgba(10,20,30,1));
-    overflow: hidden;
-    border-left: 1px solid rgba(255,255,255,.08);
-    border-right: 1px solid rgba(255,255,255,.04);
-}
+position:absolute;
+inset:0;
 
-.glassBuilding::after {
-    content: "";
-    position: absolute;
-    top: 0; left: -40%;
-    width: 25%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
-    animation: reflectionMove 10s linear infinite;
-}
+transform-origin:center center;
 
-@keyframes reflectionMove {
-    from { left: -40%; }
-    to { left: 140%; }
-}
-
-.window {
-    position: absolute;
-    width: 8px; height: 8px;
-    background: rgba(180,220,255,.8);
-    box-shadow: 0 0 8px rgba(180,220,255,.5);
 }
 
 /* =========================
-   PREMIUM SKYRBEN HQ TOWER
-   ========================= */
-#hq {
-    position: absolute;
-    left: 50%; bottom: 0;
-    transform: translateX(-50%);
-    width: 280px; height: 620px;
-    background: linear-gradient(180deg, #4c8db6, #0a131d);
-    border: 1px solid rgba(255,255,255,.12);
-    box-shadow: 0 0 60px rgba(90,180,255,.25);
-    z-index: 100;
-    overflow: hidden;
+STARS
+========================= */
+
+#stars{
+
+position:absolute;
+inset:0;
+
 }
 
-#hq::before {
-    content: "";
-    position: absolute;
-    top: -90px; left: 50%;
-    transform: translateX(-50%);
-    width: 0; height: 0;
-    border-left: 90px solid transparent;
-    border-right: 90px solid transparent;
-    border-bottom: 90px solid #4c8db6;
+.star{
+
+position:absolute;
+
+background:white;
+
+border-radius:50%;
+
+animation:
+twinkle 5s infinite ease-in-out;
+
 }
 
-#hq::after {
-    content: "";
-    position: absolute;
-    bottom: 0; left: -40px;
-    width: 300px; height: 140px;
-    background: rgba(255,255,255,.04);
-}
-    
-/* Auto-Adjusting Logo Container */
-/* Centered Container */
-#logoContainer {
-    position: absolute;
-    top: 45%; /* Slightly above dead-center for better balance on the building */
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 150;
+@keyframes twinkle{
+
+0%,100%{
+opacity:.2;
 }
 
-#logoAura {
-    position: absolute;
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(212, 175, 55, 0.25) 0%, transparent 70%);
-    filter: blur(10px);
-    opacity: 0;
-    transition: opacity 1.5s ease-in-out;
-    pointer-events: none;
+50%{
+opacity:1;
 }
 
-#towerLogo {
-    position: relative;
-    /* Reduced width to 90px for a more refined look */
-    width: 60px; 
-    height: auto; 
-    
-    opacity: 0;
-    transform: scale(0.65);
-    filter: 
-        drop-shadow(0 2px 8px rgba(0,0,0,0.8))
-        drop-shadow(0 0 12px rgba(212, 175, 55, 0.35))
-        drop-shadow(0 0 35px rgba(212, 175, 55, 0.15));
-    transition: transform 1.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 1s ease-out;
-}
-    
-#energyCore {
-    position: absolute;
-    bottom: 0; left: 50%;
-    transform: translateX(-50%);
-    width: 8px; height: 0;
-    background: #d4af37;
-    box-shadow: 0 0 20px #d4af37, 0 0 80px #d4af37;
 }
 
 /* =========================
-   CINEMATIC ANIMATIONS
-   ========================= */
-@keyframes droneFly {
-    0% { transform: translateY(120px) scale(.75); }
-    40% { transform: translateY(40px) scale(.9); }
-    70% { transform: translateY(-20px) scale(1.05); }
-    100% { transform: translateY(-60px) scale(1.2); }
-}
+MOON
+========================= */
 
-@keyframes cityFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-}
+#moon{
 
-#traffic {
-    position: absolute;
-    left: 50%; bottom: 0;
-    transform: translateX(-50%);
-    width: 900px; height: 300px;
-    pointer-events: none; z-index: 30;
-}
+position:absolute;
 
-.trail {
-    position: absolute;
-    width: 4px;
-    border-radius: 999px;
-    bottom: 0; opacity: .8;
-}
+top:8%;
+right:10%;
 
-.goldTrail {
-    background: linear-gradient(180deg, transparent, #d4af37);
-    box-shadow: 0 0 12px #d4af37;
-}
+width:140px;
+height:140px;
 
-.blueTrail {
-    background: linear-gradient(180deg, transparent, #63c6ff);
-    box-shadow: 0 0 12px #63c6ff;
-}
+border-radius:50%;
 
-.particle {
-    position: absolute;
-    width: 4px; height: 4px;
-    border-radius: 50%;
-    background: #d4af37;
-    box-shadow: 0 0 12px #d4af37;
-    pointer-events: none;
+background:
+radial-gradient(
+circle,
+#ffffff,
+#dfe7ef
+);
+
+box-shadow:
+0 0 40px rgba(255,255,255,.4),
+0 0 120px rgba(255,255,255,.15);
+
+z-index:5;
+
 }
 
 /* =========================
-   UPGRADED BRAND UI DESIGN
-   ========================= */
-#brand {
-    position: absolute;
-    left: 50%; bottom: 8%;
-    transform: translateX(-50%);
-    text-align: center;
-    opacity: 0;
-    z-index: 300;
-    width: 100%;
-    max-width: 800px;
+MOON GLOW
+========================= */
+
+#moonGlow{
+
+position:absolute;
+
+left:50%;
+top:50%;
+
+transform:
+translate(-50%,-50%);
+
+width:500px;
+height:500px;
+
+border-radius:50%;
+
+background:
+radial-gradient(
+circle,
+rgba(255,255,255,.15),
+transparent 70%
+);
+
 }
 
-#brand h1 {
-    font-size: 50px;
-    font-weight: 800;
-    letter-spacing: 12px;
-    background: linear-gradient(135deg, #ffffff 10%, #f3e5ab 40%, #d4af37 70%, #b8860b 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
-    text-transform: uppercase;
-    margin-bottom: 4px;
+/* =========================
+CLOUDS
+========================= */
+
+#clouds{
+
+position:absolute;
+inset:0;
+
+pointer-events:none;
+
+z-index:6;
+
 }
 
-#brand p {
-    margin-top: 12px;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 9px;
-    color: #a4b3c6;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
-    text-transform: uppercase;
-    opacity: 0.9;
+.cloud{
+
+position:absolute;
+
+background:
+rgba(255,255,255,.05);
+
+border-radius:999px;
+
+filter:
+blur(35px);
+
+animation:
+cloudMove linear infinite;
+
 }
 
-#glassSweep {
-    position: absolute;
-    top: 0; left: -50%;
-    width: 30%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent);
-    z-index: 120;
+@keyframes cloudMove{
+
+from{
+transform:
+translateX(-500px);
 }
 
-@keyframes fadeScene {
-    to { opacity: 0; visibility: hidden; }
+to{
+transform:
+translateX(140vw);
+}
+
+}
+
+/* =========================
+FOG
+========================= */
+
+#fog{
+
+position:absolute;
+
+left:0;
+right:0;
+bottom:0;
+
+height:40%;
+
+background:
+linear-gradient(
+180deg,
+transparent,
+rgba(255,255,255,.03),
+rgba(255,255,255,.08)
+);
+
+filter:
+blur(12px);
+
+z-index:20;
+
+}
+
+/* =========================
+CITY PLACEHOLDER
+========================= */
+
+#city{
+
+position:absolute;
+
+bottom:15%;
+
+width:100%;
+height:65%;
+
+z-index:10;
+
+}
+/* =========================
+BACK SKYLINE
+========================= */
+
+#skylineBack{
+
+position:absolute;
+inset:0;
+
+}
+
+/* =========================
+FRONT SKYLINE
+========================= */
+
+#skylineFront{
+
+position:absolute;
+inset:0;
+
+}
+
+/* =========================
+BUILDINGS
+========================= */
+
+.glassBuilding{
+
+position:absolute;
+
+bottom:0;
+
+background:
+linear-gradient(
+180deg,
+rgba(50,110,160,.95),
+rgba(10,20,30,1)
+);
+
+overflow:hidden;
+
+border-left:
+1px solid rgba(255,255,255,.08);
+
+border-right:
+1px solid rgba(255,255,255,.04);
+
+}
+
+/* =========================
+REFLECTION SWEEP
+========================= */
+
+.glassBuilding::after{
+
+content:"";
+
+position:absolute;
+
+top:0;
+left:-40%;
+
+width:25%;
+height:100%;
+
+background:
+linear-gradient(
+90deg,
+transparent,
+rgba(255,255,255,.18),
+transparent
+);
+
+animation:
+reflectionMove 10s linear infinite;
+
+}
+
+@keyframes reflectionMove{
+
+from{
+left:-40%;
+}
+
+to{
+left:140%;
+}
+
+}
+
+/* =========================
+WINDOWS
+========================= */
+
+.window{
+
+position:absolute;
+
+width:8px;
+height:8px;
+
+background:
+rgba(180,220,255,.8);
+
+box-shadow:
+0 0 8px rgba(180,220,255,.5);
+
+}
+
+/* =========================
+SKYRBEN HQ
+========================= */
+
+#hq{
+
+position:absolute;
+
+left:50%;
+bottom:0;
+
+transform:
+translateX(-50%);
+
+width:280px;
+height:620px;
+
+background:
+linear-gradient(
+180deg,
+#4c8db6,
+#0a131d
+);
+
+border:
+1px solid rgba(255,255,255,.12);
+
+box-shadow:
+0 0 60px rgba(90,180,255,.25);
+
+z-index:100;
+
+overflow:hidden;
+
+}
+
+/* HQ CROWN */
+
+#hq::before{
+
+content:"";
+
+position:absolute;
+
+top:-90px;
+left:50%;
+
+transform:
+translateX(-50%);
+
+width:0;
+height:0;
+
+border-left:90px solid transparent;
+border-right:90px solid transparent;
+border-bottom:90px solid #4c8db6;
+
+}
+
+/* HQ SIDE WINGS */
+
+#hq::after{
+
+content:"";
+
+position:absolute;
+
+bottom:0;
+left:-40px;
+
+width:300px;
+height:140px;
+
+background:
+rgba(255,255,255,.04);
+
+}
+
+/* =========================
+LOGO
+========================= */
+
+#towerLogo{
+
+position:absolute;
+
+top:14%;
+
+left:50%;
+
+transform:
+translateX(-50%)
+scale(1);
+
+/* FIXED SIZE: 80px */
+width:80px;
+
+height:auto;
+
+max-width:90%;
+
+opacity:0;
+
+z-index:150;
+
+filter:
+drop-shadow(0 0 20px #d4af37)
+drop-shadow(0 0 50px #d4af37);
+
+}
+
+/* =========================
+ENERGY CORE
+========================= */
+
+#energyCore{
+
+position:absolute;
+
+bottom:0;
+left:50%;
+
+transform:
+translateX(-50%);
+
+width:8px;
+height:0;
+
+background:#d4af37;
+
+box-shadow:
+0 0 20px #d4af37,
+0 0 80px #d4af37;
+
+}
+/* =========================
+DRONE CAMERA
+========================= */
+
+@keyframes droneFly{
+
+0%{
+
+transform:
+translateY(120px)
+scale(.75);
+
+}
+
+40%{
+
+transform:
+translateY(40px)
+scale(.9);
+
+}
+
+70%{
+
+transform:
+translateY(-20px)
+scale(1.05);
+
+}
+
+100%{
+
+transform:
+translateY(-60px)
+scale(1.2);
+
+}
+
+}
+
+/* =========================
+CITY PARALLAX
+========================= */
+
+@keyframes cityFloat{
+
+0%,100%{
+
+transform:
+translateY(0px);
+
+}
+
+50%{
+
+transform:
+translateY(-10px);
+
+}
+
+}
+
+/* =========================
+TRAFFIC TRAILS
+========================= */
+
+#traffic{
+
+position:absolute;
+
+left:50%;
+bottom:0;
+
+transform:
+translateX(-50%);
+
+width:900px;
+height:300px;
+
+pointer-events:none;
+
+z-index:30;
+
+}
+
+.trail{
+
+position:absolute;
+
+width:4px;
+
+border-radius:999px;
+
+bottom:0;
+
+opacity:.8;
+
+}
+
+/* GOLD */
+
+.goldTrail{
+
+background:
+linear-gradient(
+180deg,
+transparent,
+#d4af37
+);
+
+box-shadow:
+0 0 12px #d4af37;
+
+}
+
+/* BLUE */
+
+.blueTrail{
+
+background:
+linear-gradient(
+180deg,
+transparent,
+#63c6ff
+);
+
+box-shadow:
+0 0 12px #63c6ff;
+
+}
+
+/* =========================
+PARTICLES
+========================= */
+
+.particle{
+
+position:absolute;
+
+width:4px;
+height:4px;
+
+border-radius:50%;
+
+background:#d4af37;
+
+box-shadow:
+0 0 12px #d4af37;
+
+pointer-events:none;
+
+}
+/* =========================
+BRAND REVEAL
+========================= */
+
+#brand{
+
+position:absolute;
+
+left:50%;
+bottom:8%;
+
+transform:
+translateX(-50%);
+
+text-align:center;
+
+opacity:0;
+
+z-index:300;
+
+}
+
+#brand h1{
+
+font-size:54px;
+
+letter-spacing:8px;
+
+color:#d4af37;
+
+text-shadow:
+0 0 20px rgba(212,175,55,.8),
+0 0 60px rgba(212,175,55,.3);
+
+}
+
+#brand p{
+
+margin-top:15px;
+
+font-size:16px;
+
+letter-spacing:6px;
+
+color:white;
+
+opacity:.85;
+
+}
+
+/* =========================
+GLASS SWEEP
+========================= */
+
+#glassSweep{
+
+position:absolute;
+
+top:0;
+left:-50%;
+
+width:30%;
+height:100%;
+
+background:
+linear-gradient(
+90deg,
+transparent,
+rgba(255,255,255,.25),
+transparent
+);
+
+z-index:120;
+
+}
+
+/* =========================
+FADE OUT
+========================= */
+
+@keyframes fadeScene{
+
+to{
+
+opacity:0;
+visibility:hidden;
+
+}
+
 }
 </style>
+
 </head>
 
 <body>
 
 <div id="scene">
-    <div id="skipBtn">SKIP INTRO</div>
-    <div id="camera">
-        <div id="stars"></div>
-        <div id="moon"><div id="moonGlow"></div></div>
-        <div id="clouds"></div>
-        
-        <div id="city">
-            <div id="skylineBack"></div>
-            <div id="skylineFront"></div>
-            <div id="hq">
-                <div id="logoContainer">
-                    <div id="logoAura"></div>
-                    <img id="towerLogo" src="<a href="https://ibb.co/Xky5fjXt"><img src="https://i.ibb.co/1JsXY7ZT/Chat-GPT-Image-Jun-27-2026-12-31-44-PM.png" alt="Chat-GPT-Image-Jun-27-2026-12-31-44-PM" border="0"></a>" alt="SKYRBEN Logo">
-                </div>
-                <div id="glassSweep"></div>
-                <div id="energyCore"></div>
-            </div>
-        </div>
-        
-        <div id="traffic"></div>
-        <div id="fog"></div>
-        
-        <div id="brand">
-            <h1>SKYRBEN CONSTRUCTION</h1>
-            <p>WHERE QUALITY MEETS HERE</p>
-        </div>
-    </div>
+
+<div id="camera">
+
+<div id="stars"></div>
+
+<div id="moon">
+<div id="moonGlow"></div>
+</div>
+
+<div id="clouds"></div>
+
+<div id="city">
+
+<div id="skylineBack"></div>
+
+<div id="skylineFront"></div>
+
+<div id="hq">
+
+<img
+id="towerLogo"
+src="https://i.ibb.co/995h3sQn/image-removebg-preview.png"
+alt="SKYRBEN Logo">
+
+<div id="glassSweep"></div>
+
+<div id="energyCore"></div>
+
+</div>
+
+</div>
+
+<div id="traffic"></div>
+
+<div id="fog"></div>
+
+<div id="brand">
+
+<h1>SKYRBEN CONSTRUCTION</h1>
+
+<p>WHERE QUALITY MEETS HERE</p>
+
+</div>
+
+</div>
+
 </div>
 
 <script>
+
+/* STARS */
+
+const stars =
+document.getElementById("stars");
+
+for(let i=0;i<350;i++){
+
+const s =
+document.createElement("div");
+
+s.className="star";
+
+const size =
+Math.random()*3+1;
+
+s.style.width=size+"px";
+s.style.height=size+"px";
+
+s.style.left=
+Math.random()*100+"%";
+
+s.style.top=
+Math.random()*70+"%";
+
+s.style.animationDelay=
+Math.random()*5+"s";
+
+stars.appendChild(s);
+
+}
+
+/* CLOUDS */
+
+const clouds =
+document.getElementById("clouds");
+
+for(let i=0;i<14;i++){
+
+const c =
+document.createElement("div");
+
+c.className="cloud";
+
+c.style.width=
+(250+Math.random()*450)+"px";
+
+c.style.height=
+(80+Math.random()*120)+"px";
+
+c.style.top=
+(Math.random()*250)+"px";
+
+c.style.animationDuration=
+(35+Math.random()*25)+"s";
+
+c.style.animationDelay=
+(-Math.random()*20)+"s";
+
+clouds.appendChild(c);
+
+}
 /* =========================
-   SCENE & MAP POPULATION
-   ========================= */
+CITY GENERATOR
+========================= */
 
-const stars = document.getElementById("stars");
-for(let i=0; i<350; i++){
-    const s = document.createElement("div");
-    s.className = "star";
-    const size = Math.random() * 3 + 1;
-    s.style.width = size + "px";
-    s.style.height = size + "px";
-    s.style.left = Math.random() * 100 + "%";
-    s.style.top = Math.random() * 70 + "%";
-    s.style.animationDelay = Math.random() * 5 + "s";
-    stars.appendChild(s);
+const back =
+document.getElementById("skylineBack");
+
+for(let i=0;i<18;i++){
+
+const b =
+document.createElement("div");
+
+b.className =
+"glassBuilding";
+
+b.style.left =
+(i*6)+"%";
+
+b.style.width =
+(70+Math.random()*70)+"px";
+
+b.style.height =
+(180+Math.random()*220)+"px";
+
+b.style.opacity=".45";
+
+back.appendChild(b);
+
 }
 
-const clouds = document.getElementById("clouds");
-for(let i=0; i<14; i++){
-    const c = document.createElement("div");
-    c.className = "cloud";
-    c.style.width = (250 + Math.random() * 450) + "px";
-    c.style.height = (80 + Math.random() * 120) + "px";
-    c.style.top = (Math.random() * 250) + "px";
-    c.style.animationDuration = (35 + Math.random() * 25) + "s";
-    c.style.animationDelay = (-Math.random() * 20) + "s";
-    clouds.appendChild(c);
+/* FRONT CITY */
+
+const front =
+document.getElementById("skylineFront");
+
+for(let i=0;i<12;i++){
+
+const b =
+document.createElement("div");
+
+b.className =
+"glassBuilding";
+
+b.style.left =
+(i*8)+"%";
+
+b.style.width =
+(90+Math.random()*90)+"px";
+
+b.style.height =
+(280+Math.random()*250)+"px";
+
+front.appendChild(b);
+
 }
 
-const back = document.getElementById("skylineBack");
-for(let i=0; i<18; i++){
-    const b = document.createElement("div");
-    b.className = "glassBuilding";
-    b.style.left = (i*6) + "%";
-    b.style.width = (70 + Math.random() * 70) + "px";
-    b.style.height = (180 + Math.random() * 220) + "px";
-    b.style.opacity = ".45";
-    back.appendChild(b);
+/* WINDOWS */
+
+setTimeout(()=>{
+
+document
+.querySelectorAll(".glassBuilding,#hq")
+.forEach(building=>{
+
+const width =
+building.offsetWidth;
+
+const height =
+building.offsetHeight;
+
+for(let y=20;y<height-20;y+=18){
+
+for(let x=10;x<width-10;x+=16){
+
+if(Math.random()>.35){
+
+const win =
+document.createElement("div");
+
+win.className =
+"window";
+
+win.style.left =
+x+"px";
+
+win.style.top =
+y+"px";
+
+building.appendChild(win);
+
 }
 
-const front = document.getElementById("skylineFront");
-for(let i=0; i<12; i++){
-    const b = document.createElement("div");
-    b.className = "glassBuilding";
-    b.style.left = (i*8) + "%";
-    b.style.width = (90 + Math.random() * 90) + "px";
-    b.style.height = (280 + Math.random() * 250) + "px";
-    front.appendChild(b);
 }
 
-setTimeout(() => {
-    document.querySelectorAll(".glassBuilding, #hq").forEach(building => {
-        const width = building.offsetWidth;
-        const height = building.offsetHeight;
-        const fragment = document.createDocumentFragment();
-
-        for(let y=20; y<height-20; y+=18){
-            for(let x=10; x<width-10; x+=16){
-                if(Math.random() > .35){
-                    const win = document.createElement("div");
-                    win.className = "window";
-                    win.style.left = x + "px";
-                    win.style.top = y + "px";
-                    fragment.appendChild(win);
-                }
-            }
-        }
-        building.appendChild(fragment);
-    });
-}, 100);
-
-/* =========================
-   ANIMATION INTERFACES
-   ========================= */
-document.getElementById("camera").style.animation = "droneFly 12s forwards";
-document.getElementById("skylineBack").style.animation = "cityFloat 8s ease-in-out infinite";
-document.getElementById("skylineFront").style.animation = "cityFloat 6s ease-in-out infinite";
-
-const traffic = document.getElementById("traffic");
-for(let i=0; i<40; i++){
-    const trail = document.createElement("div");
-    trail.className = "trail " + (Math.random() > .5 ? "goldTrail" : "blueTrail");
-    trail.style.left = (Math.random() * 100) + "%";
-    trail.style.height = (60 + Math.random() * 180) + "px";
-    trail.style.opacity = (.3 + Math.random() * .7);
-    trail.dataset.speed = 5 + Math.random() * 4;
-    trail.dataset.y = Math.random() * 300;
-    traffic.appendChild(trail);
 }
 
-const particleArray = [];
-for(let i=0; i<80; i++){
-    const p = document.createElement("div");
-    p.className = "particle";
-    p.style.left = (45 + Math.random() * 10) + "%";
-    p.style.top = (35 + Math.random() * 30) + "%";
-    document.getElementById("scene").appendChild(p);
-    
-    particleArray.push({
-        element: p,
-        y: 0,
-        speed: 1.2 + Math.random() * 1.3
-    });
-}
-
-function engineUpdate() {
-    document.querySelectorAll(".trail").forEach(trail => {
-        let current = parseFloat(trail.dataset.y || 0);
-        current += parseFloat(trail.dataset.speed);
-        if(current > 350) current = -200;
-        trail.dataset.y = current;
-        trail.style.transform = `translateY(${current}px)`;
-    });
-
-    particleArray.forEach(p => {
-        p.y -= p.speed;
-        if(p.y < -140) p.y = 0;
-        p.element.style.transform = `translateY(${p.y}px)`;
-        p.element.style.opacity = Math.random();
-    });
-
-    requestAnimationFrame(engineUpdate);
-}
-requestAnimationFrame(engineUpdate);
-
-/* =========================
-   INTERACTIVE MOUSE PARALLAX
-   ========================= */
-document.addEventListener('mousemove', (e) => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 22;
-    const y = (e.clientY / window.innerHeight - 0.5) * 22;
-    document.getElementById('scene').style.transform = `translate(${-x}px, ${-y}px)`;
 });
 
+},100);
 /* =========================
-   CINEMATIC TIMELINE CONTROLLER
-   ========================= */
-let systemRedirectTimeout;
+CAMERA FLYTHROUGH
+========================= */
 
-function initiateCinematics() {
-    setTimeout(() => {
-        const core = document.getElementById("energyCore");
-        core.style.transition = "1.4s ease";
-        core.style.height = "100%";
-    }, 7000);
-
-    setTimeout(() => {
-        document.getElementById("hq").style.boxShadow = "0 0 80px rgba(212,175,55,.7), 0 0 150px rgba(212,175,55,.3)";
-    }, 7800);
-
-    setTimeout(() => {
-        const glass = document.getElementById("glassSweep");
-        glass.style.transition = "1.8s ease";
-        glass.style.left = "150%";
-    }, 8200);
-
-    setTimeout(() => {
-        const logo = document.getElementById("towerLogo");
-        const aura = document.getElementById("logoAura");
-        
-        logo.style.opacity = "1";
-        logo.style.transform = "scale(1)"; 
-        aura.style.opacity = "1";
-    }, 8800);
-
-    setTimeout(() => {
-        const brand = document.getElementById("brand");
-        brand.style.transition = "1.2s cubic-bezier(0.25, 1, 0.5, 1)";
-        brand.style.opacity = "1";
-    }, 9800);
-
-    setTimeout(() => {
-        document.getElementById("scene").style.animation = "fadeScene 1.2s forwards";
-    }, 11500);
-
-    systemRedirectTimeout = setTimeout(executeRedirect, 12000);
-}
-
-function executeRedirect() {
-    window.location.href = "https://sites.google.com/view/skyrbenconstruction-1/home";
-}
-
-initiateCinematics();
+document
+.getElementById("camera")
+.style.animation =
+"droneFly 12s forwards";
 
 /* =========================
-   SKIP INTRO OPERATIONS
-   ========================= */
-document.getElementById('skipBtn').addEventListener('click', () => {
-    clearTimeout(systemRedirectTimeout);
-    document.getElementById("scene").style.animation = "fadeScene 0.4s forwards";
-    setTimeout(executeRedirect, 400);
+PARALLAX
+========================= */
+
+document
+.getElementById("skylineBack")
+.style.animation =
+"cityFloat 8s ease-in-out infinite";
+
+document
+.getElementById("skylineFront")
+.style.animation =
+"cityFloat 6s ease-in-out infinite";
+
+/* =========================
+TRAFFIC TRAILS
+========================= */
+
+const traffic =
+document.getElementById("traffic");
+
+for(let i=0;i<40;i++){
+
+const trail =
+document.createElement("div");
+
+trail.className =
+"trail " +
+(Math.random()>.5
+? "goldTrail"
+: "blueTrail");
+
+trail.style.left =
+(Math.random()*100)+"%";
+
+trail.style.height =
+(60+Math.random()*180)+"px";
+
+trail.style.opacity =
+(.3+Math.random()*.7);
+
+traffic.appendChild(trail);
+
+}
+
+/* =========================
+ANIMATE TRAILS
+========================= */
+
+setInterval(()=>{
+
+document
+.querySelectorAll(".trail")
+.forEach(trail=>{
+
+let current =
+parseFloat(
+trail.dataset.y || 0
+);
+
+current += 8;
+
+if(current > 350){
+
+current = -200;
+
+}
+
+trail.dataset.y =
+current;
+
+trail.style.transform =
+`translateY(${current}px)`;
+
 });
+
+},30);
+
+/* =========================
+GOLD PARTICLES
+========================= */
+
+for(let i=0;i<80;i++){
+
+const p =
+document.createElement("div");
+
+p.className =
+"particle";
+
+p.style.left =
+(45+Math.random()*10)+"%";
+
+p.style.top =
+(35+Math.random()*30)+"%";
+
+document
+.getElementById("scene")
+.appendChild(p);
+
+let y = 0;
+
+setInterval(()=>{
+
+y -= 1.5;
+
+if(y < -140){
+
+y = 0;
+
+}
+
+p.style.transform =
+`translateY(${y}px)`;
+
+p.style.opacity =
+Math.random();
+
+},40);
+
+}
+/* =========================
+ENERGY CORE
+========================= */
+
+setTimeout(()=>{
+
+const core =
+document.getElementById("energyCore");
+
+core.style.transition =
+"1.4s ease";
+
+core.style.height =
+"100%";
+
+},7000);
+
+/* =========================
+HQ GLOW
+========================= */
+
+setTimeout(()=>{
+
+document
+.getElementById("hq")
+.style.boxShadow =
+"0 0 80px rgba(212,175,55,.7), 0 0 150px rgba(212,175,55,.3)";
+
+},7800);
+
+/* =========================
+GLASS SWEEP
+========================= */
+
+setTimeout(()=>{
+
+const glass =
+document.getElementById("glassSweep");
+
+glass.style.transition =
+"1.8s ease";
+
+glass.style.left =
+"150%";
+
+},8200);
+
+/* =========================
+LOGO REVEAL
+========================= */
+
+setTimeout(()=>{
+
+const logo =
+document.getElementById("towerLogo");
+
+logo.style.transition =
+"1.2s ease";
+
+logo.style.opacity =
+"1";
+
+logo.style.transform =
+"translateX(-50%) scale(1)";
+
+},8800);
+
+/* =========================
+BRAND REVEAL
+========================= */
+
+setTimeout(()=>{
+
+document
+.getElementById("brand")
+.style.transition =
+"1s ease";
+
+document
+.getElementById("brand")
+.style.opacity =
+"1";
+
+},9800);
+
+/* =========================
+FADE OUT
+========================= */
+
+setTimeout(()=>{
+
+document
+.getElementById("scene")
+.style.animation =
+"fadeScene 1.2s forwards";
+
+},11500);
+
+/* =========================
+REDIRECT
+========================= */
+
+setTimeout(()=>{
+
+window.location.href =
+"https://sites.google.com/view/skyrbenconstruction-1/home";
+
+},12000);
 </script>
 
 </body>
