@@ -218,13 +218,12 @@ html, body {
 }
     
 /* Auto-Adjusting Logo Container */
+/* Centered Container */
 #logoContainer {
     position: absolute;
-    top: 45%; /* Slightly above dead-center for better visual balance */
+    top: 45%; /* Slightly above dead-center for better balance on the building */
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 220px;  /* Strict width bound */
-    height: 180px; /* Strict height bound */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -245,11 +244,10 @@ html, body {
 
 #towerLogo {
     position: relative;
-    /* THE FIX: These 4 lines force perfect proportional scaling */
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
+    
+    /* THE ABSOLUTE FIX: Hardcode the exact width here */
+    width: 140px; 
+    height: auto; /* Forces perfect aspect ratio, no stretching */
     
     opacity: 0;
     transform: scale(0.65);
