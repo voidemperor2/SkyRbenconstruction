@@ -244,10 +244,9 @@ html, body {
 
 #towerLogo {
     position: relative;
-    
-    /* THE ABSOLUTE FIX: Hardcode the exact width here */
-    width: 140px; 
-    height: auto; /* Forces perfect aspect ratio, no stretching */
+    /* Reduced width to 90px for a more refined look */
+    width: 90px; 
+    height: auto; 
     
     opacity: 0;
     transform: scale(0.65);
@@ -257,6 +256,7 @@ html, body {
         drop-shadow(0 0 35px rgba(212, 175, 55, 0.15));
     transition: transform 1.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 1s ease-out;
 }
+    
 #energyCore {
     position: absolute;
     bottom: 0; left: 50%;
