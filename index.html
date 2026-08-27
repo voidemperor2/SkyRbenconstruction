@@ -4,458 +4,356 @@ html = r'''<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SKYRBEN — Signature Reveal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SKYRBEN — Luxury Architecture</title>
 <style>
-:root{
-  --bg:#020305;
-  --gold:#d9ad58;
-  --gold2:#f6dfaa;
-  --ice:#dcebf4;
+:root {
+  --bg: #030407;
+  --gold: #d9ad58;
+  --gold-glow: rgba(217, 173, 88, 0.35);
+  --glass: rgba(255, 255, 255, 0.025);
+  --border: rgba(217, 173, 88, 0.18);
+  --safe-b: max(25px, env(safe-area-inset-bottom));
+  --safe-r: max(25px, env(safe-area-inset-right));
 }
-*{box-sizing:border-box}
-html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:var(--bg);
-  font-family:Inter,Segoe UI,Arial,sans-serif;
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  font-family: 'Inter', -apple-system, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
 }
-body{user-select:none}
-#scene{
-  position:fixed;
-  inset:0;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 50% 48%,rgba(217,173,88,.07),transparent 28%),
-    radial-gradient(circle at 30% 24%,rgba(91,156,195,.06),transparent 24%),
-    #020305;
+
+@media (pointer: fine) {
+  body { cursor: none; }
 }
-canvas{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
+
+/* Background Atmosphere */
+#canvas {
+  position: absolute; inset: 0; z-index: 0;
+  width: 100%; height: 100%;
 }
-#glass{
-  position:absolute;
-  inset:-10%;
-  z-index:4;
-  pointer-events:none;
-  transform:rotate(-4deg);
+#vignette {
+  position: absolute; inset: 0; z-index: 1;
+  background: radial-gradient(circle at 50% 50%, transparent 20%, #000 120%);
+  pointer-events: none;
 }
-.panel{
-  position:absolute;
-  border:1px solid rgba(224,240,248,.11);
-  background:linear-gradient(135deg,rgba(255,255,255,.045),rgba(255,255,255,.006));
-  box-shadow:
-    inset 0 1px rgba(255,255,255,.055),
-    0 30px 100px rgba(0,0,0,.25);
-  backdrop-filter:blur(2px);
+
+/* Main UI Center Stage */
+#ui {
+  position: absolute; inset: 0; z-index: 10;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  perspective: 1000px;
+  padding: 20px;
 }
-.p1{width:42%;height:85%;left:-8%;top:10%;transform:skewX(-18deg)}
-.p2{width:35%;height:105%;left:30%;top:-6%;transform:skewX(16deg) rotate(4deg)}
-.p3{width:28%;height:90%;right:-3%;top:18%;transform:skewX(-14deg)}
-#lightSweep{
-  position:absolute;
-  width:55vw;
-  height:170%;
-  left:-65vw;
-  top:-35%;
-  z-index:6;
-  pointer-events:none;
-  transform:rotate(18deg);
-  background:linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255,255,255,0) 38%,
-    rgba(255,239,193,.10) 48%,
-    rgba(255,255,255,.03) 54%,
-    transparent 66%
-  );
-  filter:blur(8px);
-  /* Sped up the sweep animation */
-  animation:sweep 3.0s cubic-bezier(.16,1,.3,1) 0.2s forwards;
+
+.brand {
+  display: flex; flex-direction: column; align-items: center;
+  transform-style: preserve-3d;
+  width: 100%; max-width: 800px;
 }
-@keyframes sweep{
-  to{left:125vw}
+
+#logo {
+  width: min(75vw, 500px);
+  opacity: 0;
+  transform: translateZ(-80px) scale(0.92);
+  filter: blur(12px) drop-shadow(0 0 30px var(--gold-glow));
+  transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
 }
-#rings{
-  position:absolute;
-  inset:0;
-  z-index:8;
-  pointer-events:none;
+#logo.active {
+  opacity: 1; transform: translateZ(0) scale(1);
+  filter: blur(0px) drop-shadow(0 0 45px var(--gold-glow));
 }
-.ring{
-  position:absolute;
-  left:50%;
-  top:50%;
-  border-radius:50%;
-  border:1px solid rgba(217,173,88,.11);
-  transform:translate(-50%,-50%) scale(.35);
-  opacity:0;
+#logo img { width: 100%; height: auto; display: block; }
+
+.motto-box {
+  margin-top: clamp(20px, 3vh, 30px);
+  text-align: center;
 }
-.r1{width:min(34vw,430px);aspect-ratio:1}
-.r2{width:min(53vw,680px);aspect-ratio:1}
-.r3{width:min(72vw,900px);aspect-ratio:1}
-#logo{
-  position:absolute;
-  z-index:18;
-  left:50%;
-  top:45%;
-  width:min(52vw,620px);
-  transform:translate(-50%,-50%) scale(.12);
-  opacity:0;
-  pointer-events:none;
-  filter:
-    drop-shadow(0 0 16px rgba(255,224,161,.95))
-    drop-shadow(0 0 46px rgba(217,173,88,.62))
-    drop-shadow(0 0 90px rgba(217,173,88,.28));
+#line {
+  width: 0%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto 12px;
+  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
 }
-#logo img{display:block;width:100%;height:auto}
-#brand{
-  position:absolute;
-  left:50%;
-  top:65%;
-  transform:translate(-50%,32px);
-  opacity:0;
-  z-index:19;
-  text-align:center;
-  white-space:nowrap;
-  color:#fff;
-  /* Removed CSS transition because JS directly controls frames now for instant response */
+#line.active { width: 100px; }
+
+#motto {
+  font-size: clamp(10px, 1.3vw, 14px);
+  letter-spacing: 0.35em;
+  color: #fff; font-weight: 500; text-transform: uppercase;
+  opacity: 0; transform: translateY(15px);
+  transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s;
+  background: linear-gradient(90deg, #fff, #f6dfaa, #fff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
-#line{
-  width:85px;
-  height:1px;
-  margin:0 auto 12px;
-  background:linear-gradient(90deg,transparent,var(--gold2),transparent);
-  box-shadow:0 0 10px rgba(217,173,88,.42);
+#motto.active { opacity: 1; transform: translateY(0); }
+
+/* Clean Floating Right-Corner ENTER Button */
+.enter-btn {
+  position: absolute; bottom: var(--safe-b); right: var(--safe-r);
+  z-index: 20;
+  width: clamp(65px, 8vw, 76px);
+  height: clamp(65px, 8vw, 76px);
+  border-radius: 50%;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 9px; font-weight: 700; letter-spacing: 0.2em;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+  opacity: 0; animation: fadeIn 0.8s ease 0.8s forwards;
+  outline: none; cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
-#tag{
-  font-size:clamp(10px,1.2vw,15px);
-  letter-spacing:.32em;
-  color:rgba(244,240,229,.85);
-  font-weight:600;
+@keyframes fadeIn { to { opacity: 1; } }
+
+.enter-btn:hover, .enter-btn:focus-visible {
+  background: rgba(217, 173, 88, 0.12);
+  border-color: var(--gold);
+  box-shadow: 0 0 30px var(--gold-glow), inset 0 0 15px rgba(217,173,88,0.15);
 }
-#hud{
-  position:absolute;
-  z-index:20;
-  top:20px;
-  left:22px;
-  color:rgba(239,244,247,.42);
-  font-size:8px;
-  letter-spacing:.28em;
+
+/* Progress Indicator Ring */
+.progress-svg {
+  position: absolute; inset: -4px;
+  width: calc(100% + 8px); height: calc(100% + 8px);
+  pointer-events: none; transform: rotate(-90deg);
 }
-#hud2{
-  position:absolute;
-  z-index:20;
-  right:22px;
-  top:20px;
-  color:rgba(239,244,247,.30);
-  font-size:8px;
-  letter-spacing:.25em;
+.progress-svg circle {
+  fill: none; stroke: var(--gold); stroke-width: 1.5;
+  stroke-dasharray: 230; stroke-dashoffset: 230;
+  transition: stroke-dashoffset 0.1s linear;
+  filter: drop-shadow(0 0 4px var(--gold));
 }
-#progress{
-  position:absolute;
-  z-index:22;
-  left:50%;
-  bottom:20px;
-  transform:translateX(-50%);
-  width:min(300px,62vw);
-  height:1px;
-  background:rgba(255,255,255,.10);
+
+/* Minimal HUD */
+.hud {
+  position: absolute; color: rgba(255,255,255,0.25);
+  font-size: 9px; letter-spacing: 0.3em; font-family: monospace;
+  z-index: 20; pointer-events: none;
 }
-#progress i{
-  display:block;
-  width:0;
-  height:100%;
-  background:linear-gradient(90deg,var(--gold),var(--gold2));
-  box-shadow:0 0 14px var(--gold);
+.hud.tl { top: max(25px, env(safe-area-inset-top)); left: max(25px, env(safe-area-inset-left)); }
+.hud.bl { bottom: var(--safe-b); left: max(25px, env(safe-area-inset-left)); }
+
+@media (max-width: 600px) {
+  .hud { display: none; }
 }
-#enter{
-  position:absolute;
-  z-index:25;
-  right:18px;
-  bottom:14px;
-  border:1px solid rgba(217,173,88,.22);
-  background:rgba(3,6,9,.38);
-  color:#fff;
-  padding:9px 14px;
-  border-radius:999px;
-  font-size:9px;
-  font-weight:700;
-  letter-spacing:.18em;
-  cursor:pointer;
-  backdrop-filter:blur(10px);
-  opacity:.55;
+
+/* Custom Interactive Cursor */
+#cursor-dot, #cursor-ring {
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%); display: none;
 }
-#fade{
-  position:absolute;
-  inset:0;
-  z-index:30;
-  background:#000;
-  opacity:1;
-  pointer-events:none;
+@media (pointer: fine) {
+  #cursor-dot, #cursor-ring { display: block; }
 }
-@media(max-width:700px){
-  #logo{width:76vw;top:43%}
-  #brand{top:63%}
-  #tag{letter-spacing:.16em}
-  #hud,#hud2{display:none}
+#cursor-dot {
+  width: 4px; height: 4px; background: #f6dfaa;
+  border-radius: 50%; box-shadow: 0 0 8px #f6dfaa;
 }
+#cursor-ring {
+  width: 26px; height: 26px; border: 1px solid rgba(217,173,88,0.4);
+  border-radius: 50%; transition: width 0.2s, height 0.2s, background 0.2s, border-color 0.2s;
+}
+
+/* Smooth Shutter Transition */
+#shutter {
+  position: fixed; inset: 0; z-index: 9000; background: #000;
+  transform-origin: top; transition: transform 0.6s cubic-bezier(0.8, 0, 0.2, 1);
+}
+#shutter.open { transform: scaleY(0); }
+#shutter.close { transform-origin: bottom; transform: scaleY(1); transition: transform 0.4s cubic-bezier(0.8, 0, 0.2, 1); }
 </style>
 </head>
 <body>
-<div id="scene">
-  <canvas id="fx"></canvas>
 
-  <div id="glass">
-    <div class="panel p1"></div>
-    <div class="panel p2"></div>
-    <div class="panel p3"></div>
+<div id="shutter"></div>
+<canvas id="canvas"></canvas>
+<div id="vignette"></div>
+
+<div class="hud tl">SKYRBEN // ARCHITECTURE</div>
+<div class="hud bl" id="timer">SEQ.00</div>
+
+<div id="ui">
+  <div class="brand" id="brand">
+    <div id="logo">
+      <img src="https://i.ibb.co/21DM8HM8/Chat-GPT-Image-Jul-3-2026-02-13-07-PM.png" alt="SKYRBEN">
+    </div>
+    <div class="motto-box">
+      <div id="line"></div>
+      <div id="motto">WHERE QUALITY MEETS HERE</div>
+    </div>
   </div>
-
-  <div id="lightSweep"></div>
-
-  <div id="rings">
-    <div class="ring r1"></div>
-    <div class="ring r2"></div>
-    <div class="ring r3"></div>
-  </div>
-
-  <div id="logo">
-    <img src="https://i.ibb.co/21DM8HM8/Chat-GPT-Image-Jul-3-2026-02-13-07-PM.png" alt="SKYRBEN">
-  </div>
-
-  <div id="brand">
-    <div id="line"></div>
-    <div id="tag">WHERE QUALITY MEETS HERE</div>
-  </div>
-
-  <div id="hud">SIGNATURE ARCHITECTURAL FILM</div>
-  <div id="hud2">EST. 2023 / INDIA</div>
-
-  <div id="progress"><i></i></div>
-  <button id="enter">ENTER SITE</button>
-  <div id="fade"></div>
 </div>
+
+<button class="enter-btn" id="btn" aria-label="Enter Website">
+  <svg class="progress-svg" viewBox="0 0 76 76">
+    <circle cx="38" cy="38" r="36.5" id="ring"></circle>
+  </svg>
+  ENTER
+</button>
+
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
 
 <script>
 (() => {
-"use strict";
+  "use strict";
 
-const canvas=document.getElementById("fx");
-const ctx=canvas.getContext("2d");
-const fade=document.getElementById("fade");
-const logo=document.getElementById("logo");
-const brand=document.getElementById("brand");
-const progress=document.querySelector("#progress i");
-const enter=document.getElementById("enter");
-const rings=[...document.querySelectorAll(".ring")];
+  const URL = "https://sites.google.com/view/skyrbenconstruction-1/home";
+  const DURATION = 3500;
 
-const REDIRECT="https://sites.google.com/view/skyrbenconstruction-1/home";
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const shutter = document.getElementById('shutter');
+  const logo = document.getElementById('logo');
+  const motto = document.getElementById('motto');
+  const line = document.getElementById('line');
+  const btn = document.getElementById('btn');
+  const ring = document.getElementById('ring');
+  const timer = document.getElementById('timer');
+  const dot = document.getElementById('cursor-dot');
+  const cursorRing = document.getElementById('cursor-ring');
+  const brand = document.getElementById('brand');
 
-let W=innerWidth,H=innerHeight,DPR=1;
-let start=performance.now(),finished=false;
-let mx=.5,my=.5,targetX=.5,targetY=.5;
+  let W, H, mx = window.innerWidth / 2, my = window.innerHeight / 2;
+  let rx = mx, ry = my, exiting = false, start = null;
+  const isFine = window.matchMedia('(pointer: fine)').matches;
 
-function resize(){
-  W=innerWidth;H=innerHeight;
-  DPR=Math.min(devicePixelRatio||1,2);
-  canvas.width=W*DPR;canvas.height=H*DPR;
-  canvas.style.width=W+"px";canvas.style.height=H+"px";
-  ctx.setTransform(DPR,0,0,DPR,0,0);
-}
-addEventListener("resize",resize);resize();
-
-addEventListener("mousemove",e=>{
-  targetX=e.clientX/W;
-  targetY=e.clientY/H;
-});
-
-const pts=Array.from({length:520},()=>({
-  x:Math.random(),y:Math.random(),
-  z:Math.random(),
-  r:.4+Math.random()*1.6,
-  a:.08+Math.random()*.55,
-  p:Math.random()*Math.PI*2,
-  s:.4+Math.random()*2
-}));
-
-const shards=Array.from({length:42},()=>({
-  x:.2+Math.random()*.6,
-  y:.18+Math.random()*.58,
-  w:.012+Math.random()*.045,
-  h:.002+Math.random()*.008,
-  a:.03+Math.random()*.09,
-  phase:Math.random()*6.28
-}));
-
-const goldDust=[];
-
-function addDust(){
-  for(let i=0;i<1;i++){
-    const a=Math.random()*Math.PI*2;
-    const r=50+Math.random()*150;
-    goldDust.push({
-      x:W*.5+Math.cos(a)*r,
-      y:H*.46+Math.sin(a)*r*.55,
-      vx:(W*.5-(W*.5+Math.cos(a)*r))*.008,
-      vy:(H*.46-(H*.46+Math.sin(a)*r*.55))*.008,
-      life:.3+Math.random()*.7,
-      size:0.8+Math.random()*2.2
-    });
+  function resize() {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W * window.devicePixelRatio;
+    canvas.height = H * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
   }
-}
+  window.addEventListener('resize', resize);
+  resize();
 
-function background(t){
-  const g=ctx.createLinearGradient(0,0,0,H);
-  g.addColorStop(0,"#010204");
-  g.addColorStop(.42,"#06090d");
-  g.addColorStop(.75,"#080c11");
-  g.addColorStop(1,"#020305");
-  ctx.fillStyle=g;
-  ctx.fillRect(0,0,W,H);
+  // Initialize reveal sequence
+  setTimeout(() => {
+    shutter.classList.add('open');
+    logo.classList.add('active');
+    motto.classList.add('active');
+    line.classList.add('active');
+    start = performance.now();
+    requestAnimationFrame(loop);
+  }, 100);
 
-  const center=ctx.createRadialGradient(W*.5,H*.47,0,W*.5,H*.47,W*.54);
-  center.addColorStop(0,"rgba(217,173,88,.075)");
-  center.addColorStop(.30,"rgba(100,165,195,.022)");
-  center.addColorStop(1,"rgba(0,0,0,0)");
-  ctx.fillStyle=center;
-  ctx.fillRect(0,0,W,H);
+  // Network particles
+  const count = Math.min(Math.floor((window.innerWidth * window.innerHeight) / 14000), 70);
+  const pts = Array.from({ length: count }, () => ({
+    x: Math.random() * W, y: Math.random() * H,
+    vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35,
+    r: Math.random() * 1.2 + 0.4
+  }));
 
-  /* depth particles */
-  for(const p of pts){
-    const wave=.55+.45*Math.sin(t*p.s+p.p);
-    ctx.globalAlpha=p.a*wave;
-    ctx.fillStyle=p.z>.72?"#dbeaf2":"#f2e4c2";
-    ctx.beginPath();
-    ctx.arc(
-      p.x*W+(mx-.5)*p.z*18,
-      p.y*H+(my-.5)*p.z*10,
-      p.r*(.55+.8*p.z),
-      0,Math.PI*2
-    );
-    ctx.fill();
-  }
-  ctx.globalAlpha=1;
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.lineWidth = 0.5;
 
-  /* hairline abstract geometry */
-  for(let i=0;i<shards.length;i++){
-    const s=shards[i];
-    const pulse=.5+.5*Math.sin(t*.6+s.phase);
-    ctx.strokeStyle=`rgba(217,173,88,${s.a*pulse})`;
-    ctx.lineWidth=1;
-    ctx.beginPath();
-    ctx.moveTo(s.x*W,s.y*H);
-    ctx.lineTo((s.x+s.w)*W,(s.y+s.h)*H);
-    ctx.stroke();
-  }
-}
+    for (let i = 0; i < pts.length; i++) {
+      let p = pts[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
 
-function updateGold(){
-  for(let i=goldDust.length-1;i>=0;i--){
-    const p=goldDust[i];
-    p.life-=.025; // Dust fades faster now
-    p.x+=p.vx;p.y+=p.vy;
-    if(p.life<=0)goldDust.splice(i,1);
-  }
-  for(const p of goldDust){
-    ctx.fillStyle=`rgba(246,223,170,${Math.max(0,p.life)})`;
-    ctx.shadowBlur=12;ctx.shadowColor="#d9ad58";
-    ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();
-  }
-  ctx.shadowBlur=0;
-}
+      let dx = mx - p.x, dy = my - p.y, dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 130 && isFine) {
+        p.x -= dx * 0.012; p.y -= dy * 0.012;
+      }
 
-/* animation */
-function frame(now){
-  const t=(now-start)/1000;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(217, 173, 88, ${dist < 130 ? 0.75 : 0.25})`;
+      ctx.fill();
 
-  mx+=(targetX-mx)*.055;
-  my+=(targetY-my)*.055;
-
-  background(t);
-
-  // --- FASTER TIMINGS ---
-  const logoStart = 0.3;
-  const logoDuration = 1.5; 
-  const brandStart = 1.5; 
-  const brandDuration = 0.6;
-  const totalSceneTime = 3.5; 
-  const fadeOutStart = totalSceneTime - 0.6; // 2.9s
-
-  if(t > logoStart) {
-    const p = clamp((t-logoStart)/logoDuration,0,1);
-    const e = easeOut(p);
-    logo.style.opacity = p;
-    logo.style.transform = `translate(-50%,-50%) scale(${.12+.88*e})`;
-    
-    for(const r of rings){
-      r.style.opacity = (p*.38);
-    }
-    rings.forEach((r,i)=>{
-      const s=.35+(.72+ i*.08)*e;
-      r.style.transform=
-        `translate(-50%,-50%) scale(${s}) rotate(${i*14+e*20}deg)`;
-    });
-
-    if (t < 2.5 && Math.random() < 0.7) {
-        addDust();
+      for (let j = i + 1; j < pts.length; j++) {
+        let p2 = pts[j], lDist = Math.hypot(p.x - p2.x, p.y - p2.y);
+        if (lDist < 105) {
+          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = `rgba(100, 150, 180, ${(1 - lDist/105) * 0.18})`;
+          ctx.stroke();
+        }
+      }
     }
   }
 
-  if(t > brandStart) {
-    const p = clamp((t-brandStart)/brandDuration,0,1);
-    const e = easeOut(p);
-    brand.style.opacity=p;
-    brand.style.transform=
-      `translate(-50%,${32-32*e}px)`;
+  // Input tracking
+  if (isFine) {
+    window.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.transform = `translate(${mx}px, ${my}px)`;
+      brand.style.transform = `rotateX(${-(my/H - 0.5)*10}deg) rotateY(${(mx/W - 0.5)*10}deg)`;
+    });
+
+    btn.addEventListener('mousemove', e => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+      cursorRing.style.width = '60px'; cursorRing.style.height = '60px';
+      cursorRing.style.borderColor = 'transparent';
+      cursorRing.style.backgroundColor = 'rgba(217,173,88,0.06)';
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = `translate(0px, 0px)`;
+      cursorRing.style.width = '26px'; cursorRing.style.height = '26px';
+      cursorRing.style.borderColor = 'rgba(217,173,88,0.4)';
+      cursorRing.style.backgroundColor = 'transparent';
+    });
   }
 
-  updateGold();
+  // Universal Triggers (Keyboard / Console / Click)
+  window.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') redirect(); });
+  window.addEventListener('gamepadconnected', () => {
+    setInterval(() => {
+      const gp = navigator.getGamepads()[0];
+      if (gp && gp.buttons.some(b => b.pressed)) redirect();
+    }, 100);
+  });
 
-  progress.style.width=(clamp(t/totalSceneTime,0,1)*100)+"%";
-
-  // Adjusted screen fade timings
-  if(t < 0.4) {
-      fade.style.opacity = 1 - t/0.4;
-  } else if(t < fadeOutStart) {
-      fade.style.opacity = 0;
-  } else {
-      fade.style.opacity = clamp((t - fadeOutStart)/0.6, 0, 1);
+  function redirect() {
+    if (exiting) return;
+    exiting = true;
+    shutter.classList.remove('open');
+    shutter.classList.add('close');
+    setTimeout(() => { window.location.href = URL; }, 400);
   }
 
-  if(t >= totalSceneTime && !finished){
-    finished=true;
-    location.href=REDIRECT;
+  btn.addEventListener('click', redirect);
+
+  function loop(now) {
+    if (exiting) return;
+    draw();
+
+    if (isFine) {
+      rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15;
+      cursorRing.style.transform = `translate(${rx}px, ${ry}px)`;
+    }
+
+    let progress = Math.min((now - start) / DURATION, 1);
+    ring.style.strokeDashoffset = 230 - (230 * progress);
+    timer.innerText = `SEQ.0${Math.floor(progress * 100).toString().padStart(2, '0')}`;
+
+    if (progress >= 1) redirect();
+    else requestAnimationFrame(loop);
   }
-
-  requestAnimationFrame(frame);
-}
-requestAnimationFrame(frame);
-
-enter.addEventListener("click",()=>{
-  if(finished)return;
-  finished=true;
-  fade.style.opacity=1;
-  setTimeout(()=>location.href=REDIRECT,300); // Faster manual click redirect
-});
-addEventListener("keydown",e=>{
-  if(e.key==="Enter"||e.key==="Escape")enter.click();
-});
-
-function lerp(a,b,t){return a+(b-a)*t}
-function easeOut(t){return 1-Math.pow(1-t,3)}
-function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
-
 })();
 </script>
 </body>
 </html>'''
 
-out = Path("SKYRBEN_Signature_Fast_Logo_Motto.html")
+out = Path("SKYRBEN_Streamlined_UI.html")
 out.write_text(html.replace('\xa0', ' '), encoding="utf-8")
-print(out)
+print(f"File created successfully: {out.resolve()}")
