@@ -469,3 +469,47 @@ footer {
   .service-row .thumb { order: -1; }
   .testi-track { grid-template-columns: 1fr; }
 }
+/* -------- pinned horizontal testimonials (Wispr-style) -------- */
+.pin-scroll-space {
+  position: relative;
+  height: 260vh;
+}
+.pin-wrap {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.testi-h-track {
+  display: flex;
+  gap: 24px;
+  padding: 0 var(--gutter);
+  will-change: transform;
+}
+.testi-card-h {
+  flex: 0 0 min(78vw, 380px);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 34px 28px;
+}
+.testi-card-h .quote-mark {
+  font-family: var(--display);
+  font-size: 42px;
+  color: var(--signal);
+  display: block;
+  margin-bottom: 10px;
+}
+.testi-card-h p.quote { font-size: 15px; color: var(--ink); min-height: 90px; }
+.testi-card-h .who {
+  margin-top: 20px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--steel);
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+@media (max-width: 900px) {
+  .pin-scroll-space { height: 220vh; }
+}
