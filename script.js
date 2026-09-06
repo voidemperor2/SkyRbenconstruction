@@ -77,3 +77,19 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
     }
   });
 });
+/* -------- pinned horizontal scroll for testimonials -------- */
+const pinSpace = document.querySelector('.pin-scroll-space');
+const testiTrack = document.getElementById('testiTrack');
+
+if (pinSpace && testiTrack && !prefersReduced) {
+  const updateTrack = () => {
+    const rect = pinSpace.getBoundingClientRect();
+    const scrollableHeight = pinSpace.offsetHeight - window.innerHeight;
+    let progress = scrollableHeight > 0 ? -rect.top / scrollableHeight : 0;
+    progress = Math.max(0, Math.min(1, progress));
+    const maxTranslate = Math.max(testiTrack.scrollWidth - window.innerWidth + 80, 0);
+    testiTrack.style.transform = `translateX(-${progress * maxTranslate}px)`;
+    requestAnimationFrame(updateTrack);
+  };
+  requestAnimationFrame(updateTrack);
+}
