@@ -1,0 +1,359 @@
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SKYRBEN — Luxury Architecture</title>
+<style>
+:root {
+  --bg: #030407;
+  --gold: #d9ad58;
+  --gold-glow: rgba(217, 173, 88, 0.35);
+  --glass: rgba(255, 255, 255, 0.025);
+  --border: rgba(217, 173, 88, 0.18);
+  --safe-b: max(25px, env(safe-area-inset-bottom));
+  --safe-r: max(25px, env(safe-area-inset-right));
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  font-family: 'Inter', -apple-system, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+@media (pointer: fine) {
+  body { cursor: none; }
+}
+
+/* Background Atmosphere */
+#canvas {
+  position: absolute; inset: 0; z-index: 0;
+  width: 100%; height: 100%;
+}
+#vignette {
+  position: absolute; inset: 0; z-index: 1;
+  background: radial-gradient(circle at 50% 50%, transparent 20%, #000 120%);
+  pointer-events: none;
+}
+
+/* Main UI Center Stage */
+#ui {
+  position: absolute; inset: 0; z-index: 10;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  perspective: 1000px;
+  padding: 20px;
+}
+
+.brand {
+  display: flex; flex-direction: column; align-items: center;
+  transform-style: preserve-3d;
+  width: 100%; max-width: 800px;
+}
+
+#logo {
+  width: min(75vw, 500px);
+  opacity: 0;
+  transform: translateZ(-80px) scale(0.92);
+  filter: blur(12px) drop-shadow(0 0 30px var(--gold-glow));
+  transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+#logo.active {
+  opacity: 1; transform: translateZ(0) scale(1);
+  filter: blur(0px) drop-shadow(0 0 45px var(--gold-glow));
+}
+#logo img { width: 100%; height: auto; display: block; }
+
+.motto-box {
+  margin-top: clamp(20px, 3vh, 30px);
+  text-align: center;
+}
+#line {
+  width: 0%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto 12px;
+  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+}
+#line.active { width: 100px; }
+
+#motto {
+  font-size: clamp(10px, 1.3vw, 14px);
+  letter-spacing: 0.35em;
+  color: #fff; font-weight: 500; text-transform: uppercase;
+  opacity: 0; transform: translateY(15px);
+  transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s;
+  background: linear-gradient(90deg, #fff, #f6dfaa, #fff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+#motto.active { opacity: 1; transform: translateY(0); }
+
+/* Clean Floating Right-Corner ENTER Button */
+.enter-btn {
+  position: absolute; bottom: var(--safe-b); right: var(--safe-r);
+  z-index: 20;
+  width: clamp(65px, 8vw, 76px);
+  height: clamp(65px, 8vw, 76px);
+  border-radius: 50%;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 9px; font-weight: 700; letter-spacing: 0.2em;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+  opacity: 0; animation: fadeIn 0.8s ease 0.8s forwards;
+  outline: none; cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+@keyframes fadeIn { to { opacity: 1; } }
+
+.enter-btn:hover, .enter-btn:focus-visible {
+  background: rgba(217, 173, 88, 0.12);
+  border-color: var(--gold);
+  box-shadow: 0 0 30px var(--gold-glow), inset 0 0 15px rgba(217,173,88,0.15);
+}
+
+/* Progress Indicator Ring */
+.progress-svg {
+  position: absolute; inset: -4px;
+  width: calc(100% + 8px); height: calc(100% + 8px);
+  pointer-events: none; transform: rotate(-90deg);
+}
+.progress-svg circle {
+  fill: none; stroke: var(--gold); stroke-width: 1.5;
+  stroke-dasharray: 230; stroke-dashoffset: 230;
+  transition: stroke-dashoffset 0.1s linear;
+  filter: drop-shadow(0 0 4px var(--gold));
+}
+
+/* Minimal HUD */
+.hud {
+  position: absolute; color: rgba(255,255,255,0.25);
+  font-size: 9px; letter-spacing: 0.3em; font-family: monospace;
+  z-index: 20; pointer-events: none;
+}
+.hud.tl { top: max(25px, env(safe-area-inset-top)); left: max(25px, env(safe-area-inset-left)); }
+.hud.bl { bottom: var(--safe-b); left: max(25px, env(safe-area-inset-left)); }
+
+@media (max-width: 600px) {
+  .hud { display: none; }
+}
+
+/* Custom Interactive Cursor */
+#cursor-dot, #cursor-ring {
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%); display: none;
+}
+@media (pointer: fine) {
+  #cursor-dot, #cursor-ring { display: block; }
+}
+#cursor-dot {
+  width: 4px; height: 4px; background: #f6dfaa;
+  border-radius: 50%; box-shadow: 0 0 8px #f6dfaa;
+}
+#cursor-ring {
+  width: 26px; height: 26px; border: 1px solid rgba(217,173,88,0.4);
+  border-radius: 50%; transition: width 0.2s, height 0.2s, background 0.2s, border-color 0.2s;
+}
+
+/* Smooth Shutter Transition */
+#shutter {
+  position: fixed; inset: 0; z-index: 9000; background: #000;
+  transform-origin: top; transition: transform 0.6s cubic-bezier(0.8, 0, 0.2, 1);
+}
+#shutter.open { transform: scaleY(0); }
+#shutter.close { transform-origin: bottom; transform: scaleY(1); transition: transform 0.4s cubic-bezier(0.8, 0, 0.2, 1); }
+</style>
+</head>
+<body>
+
+<div id="shutter"></div>
+<canvas id="canvas"></canvas>
+<div id="vignette"></div>
+
+<div class="hud tl">SKYRBEN // ARCHITECTURE</div>
+<div class="hud bl" id="timer">SEQ.00</div>
+
+<div id="ui">
+  <div class="brand" id="brand">
+    <div id="logo">
+      <img src="https://i.ibb.co/21DM8HM8/Chat-GPT-Image-Jul-3-2026-02-13-07-PM.png" alt="SKYRBEN">
+    </div>
+    <div class="motto-box">
+      <div id="line"></div>
+      <div id="motto">WHERE QUALITY MEETS HERE</div>
+    </div>
+  </div>
+</div>
+
+<button class="enter-btn" id="btn" aria-label="Enter Website">
+  <svg class="progress-svg" viewBox="0 0 76 76">
+    <circle cx="38" cy="38" r="36.5" id="ring"></circle>
+  </svg>
+  ENTER
+</button>
+
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<script>
+(() => {
+  "use strict";
+
+  const URL = "https://sites.google.com/view/skyrbenconstruction-1";
+  const DURATION = 3500;
+
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const shutter = document.getElementById('shutter');
+  const logo = document.getElementById('logo');
+  const motto = document.getElementById('motto');
+  const line = document.getElementById('line');
+  const btn = document.getElementById('btn');
+  const ring = document.getElementById('ring');
+  const timer = document.getElementById('timer');
+  const dot = document.getElementById('cursor-dot');
+  const cursorRing = document.getElementById('cursor-ring');
+  const brand = document.getElementById('brand');
+
+  let W, H, mx = window.innerWidth / 2, my = window.innerHeight / 2;
+  let rx = mx, ry = my, exiting = false, start = null;
+  const isFine = window.matchMedia('(pointer: fine)').matches;
+
+  function resize() {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W * window.devicePixelRatio;
+    canvas.height = H * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // Initialize reveal sequence
+  setTimeout(() => {
+    shutter.classList.add('open');
+    logo.classList.add('active');
+    motto.classList.add('active');
+    line.classList.add('active');
+    start = performance.now();
+    requestAnimationFrame(loop);
+  }, 100);
+
+  // Network particles
+  const count = Math.min(Math.floor((window.innerWidth * window.innerHeight) / 14000), 70);
+  const pts = Array.from({ length: count }, () => ({
+    x: Math.random() * W, y: Math.random() * H,
+    vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35,
+    r: Math.random() * 1.2 + 0.4
+  }));
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.lineWidth = 0.5;
+
+    for (let i = 0; i < pts.length; i++) {
+      let p = pts[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+
+      let dx = mx - p.x, dy = my - p.y, dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 130 && isFine) {
+        p.x -= dx * 0.012; p.y -= dy * 0.012;
+      }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(217, 173, 88, ${dist < 130 ? 0.75 : 0.25})`;
+      ctx.fill();
+
+      for (let j = i + 1; j < pts.length; j++) {
+        let p2 = pts[j], lDist = Math.hypot(p.x - p2.x, p.y - p2.y);
+        if (lDist < 105) {
+          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = `rgba(100, 150, 180, ${(1 - lDist/105) * 0.18})`;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  // Input tracking
+  if (isFine) {
+    window.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.transform = `translate(${mx}px, ${my}px)`;
+      brand.style.transform = `rotateX(${-(my/H - 0.5)*10}deg) rotateY(${(mx/W - 0.5)*10}deg)`;
+    });
+
+    btn.addEventListener('mousemove', e => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+      cursorRing.style.width = '60px'; cursorRing.style.height = '60px';
+      cursorRing.style.borderColor = 'transparent';
+      cursorRing.style.backgroundColor = 'rgba(217,173,88,0.06)';
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = `translate(0px, 0px)`;
+      cursorRing.style.width = '26px'; cursorRing.style.height = '26px';
+      cursorRing.style.borderColor = 'rgba(217,173,88,0.4)';
+      cursorRing.style.backgroundColor = 'transparent';
+    });
+  }
+
+  // Universal Triggers (Keyboard / Console / Click)
+  window.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') redirect(); });
+  window.addEventListener('gamepadconnected', () => {
+    setInterval(() => {
+      const gp = navigator.getGamepads()[0];
+      if (gp && gp.buttons.some(b => b.pressed)) redirect();
+    }, 100);
+  });
+
+  function redirect() {
+    if (exiting) return;
+    exiting = true;
+    shutter.classList.remove('open');
+    shutter.classList.add('close');
+    setTimeout(() => { window.location.href = URL; }, 400);
+  }
+
+  btn.addEventListener('click', redirect);
+
+  function loop(now) {
+    if (exiting) return;
+    draw();
+
+    if (isFine) {
+      rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15;
+      cursorRing.style.transform = `translate(${rx}px, ${ry}px)`;
+    }
+
+    let progress = Math.min((now - start) / DURATION, 1);
+    ring.style.strokeDashoffset = 230 - (230 * progress);
+    timer.innerText = `SEQ.0${Math.floor(progress * 100).toString().padStart(2, '0')}`;
+
+    if (progress >= 1) redirect();
+    else requestAnimationFrame(loop);
+  }
+})();
+</script>
+</body>
+</html>'''
+
+out = Path("SKYRBEN_Streamlined_UI.html")
+out.write_text(html.replace('\xa0', ' '), encoding="utf-8")
+print(f"File created successfully: {out.resolve()}")
